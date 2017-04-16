@@ -2,6 +2,7 @@
   "compilerOptions": {
     "strictNullChecks": true,
     "noUnusedLocals" : true,
+    "moduleResolution": "node",
     "outDir": "./dist/",
     "sourceMap": true,
     "noImplicitAny": true,
@@ -9,8 +10,5 @@
     "module": "ES2015",
     "target": "es5",
     "jsx": "react"
-  },
-  "include": [
-    "src/**/*"
-  ]
+  }
 }

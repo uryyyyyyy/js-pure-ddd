@@ -1,12 +1,9 @@
-import * as React from "react";
-import * as ReactDOM from "react-dom";
-import Counter from "./counter/Root";
-import store from "./Store";
-import {Provider} from "react-redux";
+import * as React from 'react'
+import * as ReactDOM from 'react-dom'
+import App from './views/App'
+import counterService from './service/CounterService'
 
 ReactDOM.render(
-  <Provider store={store}>
-    <Counter />
-  </Provider>
-  , document.getElementById('app')
-);
+  <App counterService={counterService} />
+  , document.getElementById("app")
+)
