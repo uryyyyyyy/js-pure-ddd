@@ -1,5 +1,5 @@
 import * as React from 'react'
-import counterService from '../../service/CounterService'
+import counterService from '../../services/CounterService'
 import {shallow} from 'enzyme'
 import App from '../App'
 import Count from '../../domain/Count'

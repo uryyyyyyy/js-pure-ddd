@@ -1,6 +1,6 @@
 import * as React from 'react'
 import Count from '../domain/Count'
-import {CounterService} from '../service/CounterService'
+import {CounterService} from '../services/CounterService'
 
 interface Props {
   counterService: CounterService
