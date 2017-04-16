@@ -10,12 +10,15 @@ export class CounterRepository {
 
   constructor(private storage: Storage) {
     this.subject = new Subject()
+    if(!this.storage.getItem(countKey)){
+      this.storage.setItem(countKey, '0')
+    }
   }
 
   /**
    * saveするよ
    */
-  save(count: Count) {
+  save(count: Count): void {
     this.storage.setItem(countKey, count.getCount().toString())
     this.subject.next(count)
   }

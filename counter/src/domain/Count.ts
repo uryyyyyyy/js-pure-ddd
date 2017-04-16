@@ -1,4 +1,6 @@
 
+import deepEqual from 'deep-equal'
+
 export default class Count {
   private value: number
 
@@ -25,5 +27,9 @@ export default class Count {
    */
   getCount(): number {
     return this.value
+  }
+
+  equals(count: Count): boolean {
+    return deepEqual(this, count)
   }
 }

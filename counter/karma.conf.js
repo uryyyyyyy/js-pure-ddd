@@ -39,6 +39,10 @@ module.exports = function (config) {
       }
     },
 
+    client: {
+      captureConsole: true
+    },
+
     reporters: ['mocha'],
     port: 9876,
     colors: true,
