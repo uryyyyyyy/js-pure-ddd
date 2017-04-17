@@ -1,43 +1,38 @@
 package com.github.uryyyyyyy.chat
 
-import java.util.concurrent.TimeUnit
-
-import akka.NotUsed
-import akka.actor.ActorSystem
+import akka.actor.{Actor, Props}
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.ws.{Message, TextMessage}
 import akka.http.scaladsl.model.{HttpRequest, HttpResponse}
 import akka.http.scaladsl.server.Directives._
-import akka.stream.ActorMaterializer
+import akka.pattern.ask
 import akka.stream.scaladsl.{Flow, Sink, Source}
+import akka.util.Timeout
+import com.github.uryyyyyyy.chat.AppContext._
 
-import scala.concurrent.Future
-import scala.concurrent.duration.FiniteDuration
+import scala.concurrent.duration.{Duration, _}
+import scala.concurrent.{Await, Future}
 
 object Main {
 
-  val wsFlow: Flow[String, TextMessage, Any] = {
+  implicit val ec = system.dispatcher
 
-    val sink = Flow[String]
-      .to(Sink.foreach(str => println(str)))
+  val idGenerator = system.actorOf(Props[IdGenerator])
 
-    val source: Source[TextMessage, Any] = Source.tick(
-      FiniteDuration(1, TimeUnit.SECONDS),
-      FiniteDuration(1, TimeUnit.SECONDS),
-      TextMessage.Strict("hello"))
+  val repo = ChatRepository.instance
 
+  def wsFlow(): Flow[Message, Message, Any] = {
+    implicit val timeout = Timeout(100.milliseconds)
+    val id = Await.result(idGenerator ? "id please", Duration.Inf).asInstanceOf[Int]
+    val sink: Sink[Message, Any] = Sink.foreach[Message] {
+      case TextMessage.Strict(msg) => repo.addMessage(msg)
+      case _ => println("none")
+    }
+    val source: Source[Message, Any] = Source.fromPublisher(repo.getPublisher()).map(msg => TextMessage.Strict(msg))
     Flow.fromSinkAndSource(sink, source)
   }
 
-  val greeterWebSocketService: Flow[Message, Message, NotUsed] = Flow[Message]
-    .collect { case TextMessage.Strict(msg) => msg }
-    .via(wsFlow)
-
   def main(args: Array[String]): Unit = {
-
-    implicit val system = ActorSystem()
-    implicit val materializer = ActorMaterializer()
-    implicit val ec = system.dispatcher
 
     val route: Flow[HttpRequest, HttpResponse, Any] = path("") {
       get {
@@ -45,7 +40,7 @@ object Main {
       }
     } ~ get {
       path("chat") {
-        handleWebSocketMessages(greeterWebSocketService)
+        handleWebSocketMessages(wsFlow())
       }
     }
 
@@ -57,5 +52,19 @@ object Main {
     bindingFuture
       .flatMap(_.unbind())
       .onComplete(_ => system.terminate())
+  }
+}
+
+
+class IdGenerator extends Actor{
+
+  var id = 0
+
+  def receive = {
+    case "id please" => {
+      this.id += 1
+      sender() ! this.id
+    }
+    case _ => println("???")
   }
 }
