@@ -1,43 +1,44 @@
 package com.github.uryyyyyyy.chat
 
-import java.util.concurrent.TimeUnit
-
-import akka.NotUsed
-import akka.actor.ActorSystem
+import akka.actor.{Actor, ActorRef, ActorSystem, Props}
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.ws.{Message, TextMessage}
 import akka.http.scaladsl.model.{HttpRequest, HttpResponse}
 import akka.http.scaladsl.server.Directives._
-import akka.stream.ActorMaterializer
+import akka.pattern.ask
 import akka.stream.scaladsl.{Flow, Sink, Source}
+import akka.stream.{ActorMaterializer, OverflowStrategy}
+import akka.util.Timeout
 
-import scala.concurrent.Future
-import scala.concurrent.duration.FiniteDuration
+import scala.collection.mutable
+import scala.concurrent.duration.{Duration, _}
+import scala.concurrent.{Await, Future}
 
 object Main {
 
-  val wsFlow: Flow[String, TextMessage, Any] = {
+  implicit val system = ActorSystem()
+  implicit val materializer = ActorMaterializer()
+  implicit val ec = system.dispatcher
 
-    val sink = Flow[String]
-      .to(Sink.foreach(str => println(str)))
+  val helloActor = system.actorOf(Props[HelloActor])
+  val idGenerator = system.actorOf(Props[IdGenerator])
 
-    val source: Source[TextMessage, Any] = Source.tick(
-      FiniteDuration(1, TimeUnit.SECONDS),
-      FiniteDuration(1, TimeUnit.SECONDS),
-      TextMessage.Strict("hello"))
+  def wsFlow(): Flow[Message, Message, Any] = {
+    implicit val timeout = Timeout(100.milliseconds)
+    val id = Await.result(idGenerator ? "id please", Duration.Inf).asInstanceOf[Int]
+
+    val sink = Flow[Message]
+      .to(Sink.actorRef[Message](helloActor, (id, "complete")))
+
+    val source: Source[Message, Any] = Source.actorRef(
+      bufferSize = 100,
+      overflowStrategy = OverflowStrategy.fail
+    ).mapMaterializedValue(actorRef => helloActor ! (id, actorRef))
 
     Flow.fromSinkAndSource(sink, source)
   }
 
-  val greeterWebSocketService: Flow[Message, Message, NotUsed] = Flow[Message]
-    .collect { case TextMessage.Strict(msg) => msg }
-    .via(wsFlow)
-
   def main(args: Array[String]): Unit = {
-
-    implicit val system = ActorSystem()
-    implicit val materializer = ActorMaterializer()
-    implicit val ec = system.dispatcher
 
     val route: Flow[HttpRequest, HttpResponse, Any] = path("") {
       get {
@@ -45,7 +46,7 @@ object Main {
       }
     } ~ get {
       path("chat") {
-        handleWebSocketMessages(greeterWebSocketService)
+        handleWebSocketMessages(wsFlow())
       }
     }
 
@@ -57,5 +58,38 @@ object Main {
     bindingFuture
       .flatMap(_.unbind())
       .onComplete(_ => system.terminate())
+  }
+}
+
+
+class HelloActor extends Actor{
+
+  val map: mutable.Map[Int, ActorRef] = mutable.Map.empty
+
+  def receive = {
+    case (id: Int, ref: ActorRef) => map.put(id, ref)
+    case (id: Int, "complete") => {
+      println(s"complete ${id}")
+      context.stop(map(id))
+      map.remove(id)
+    }
+    case TextMessage.Strict(msg) => {
+      println(msg)
+      map.values.foreach(ref => ref ! TextMessage.Strict(msg))
+    }
+    case _ => println("???")
+  }
+}
+
+class IdGenerator extends Actor{
+
+  var id = 0
+
+  def receive = {
+    case "id please" => {
+      this.id += 1
+      sender() ! this.id
+    }
+    case _ => println("???")
   }
 }
