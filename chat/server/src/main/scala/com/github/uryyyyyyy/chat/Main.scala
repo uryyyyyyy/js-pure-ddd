@@ -1,40 +1,34 @@
 package com.github.uryyyyyyy.chat
 
-import akka.actor.{Actor, ActorRef, ActorSystem, Props}
+import akka.actor.{Actor, Props}
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.ws.{Message, TextMessage}
 import akka.http.scaladsl.model.{HttpRequest, HttpResponse}
 import akka.http.scaladsl.server.Directives._
 import akka.pattern.ask
 import akka.stream.scaladsl.{Flow, Sink, Source}
-import akka.stream.{ActorMaterializer, OverflowStrategy}
 import akka.util.Timeout
+import com.github.uryyyyyyy.chat.AppContext._
 
-import scala.collection.mutable
 import scala.concurrent.duration.{Duration, _}
 import scala.concurrent.{Await, Future}
 
 object Main {
 
-  implicit val system = ActorSystem()
-  implicit val materializer = ActorMaterializer()
   implicit val ec = system.dispatcher
 
-  val helloActor = system.actorOf(Props[HelloActor])
   val idGenerator = system.actorOf(Props[IdGenerator])
+
+  val repo = ChatRepository.instance
 
   def wsFlow(): Flow[Message, Message, Any] = {
     implicit val timeout = Timeout(100.milliseconds)
     val id = Await.result(idGenerator ? "id please", Duration.Inf).asInstanceOf[Int]
-
-    val sink = Flow[Message]
-      .to(Sink.actorRef[Message](helloActor, (id, "complete")))
-
-    val source: Source[Message, Any] = Source.actorRef(
-      bufferSize = 100,
-      overflowStrategy = OverflowStrategy.fail
-    ).mapMaterializedValue(actorRef => helloActor ! (id, actorRef))
-
+    val sink: Sink[Message, Any] = Sink.foreach[Message] {
+      case TextMessage.Strict(msg) => repo.addMessage(msg)
+      case _ => println("none")
+    }
+    val source: Source[Message, Any] = Source.fromPublisher(repo.getPublisher()).map(msg => TextMessage.Strict(msg))
     Flow.fromSinkAndSource(sink, source)
   }
 
@@ -61,25 +55,6 @@ object Main {
   }
 }
 
-
-class HelloActor extends Actor{
-
-  val map: mutable.Map[Int, ActorRef] = mutable.Map.empty
-
-  def receive = {
-    case (id: Int, ref: ActorRef) => map.put(id, ref)
-    case (id: Int, "complete") => {
-      println(s"complete ${id}")
-      context.stop(map(id))
-      map.remove(id)
-    }
-    case TextMessage.Strict(msg) => {
-      println(msg)
-      map.values.foreach(ref => ref ! TextMessage.Strict(msg))
-    }
-    case _ => println("???")
-  }
-}
 
 class IdGenerator extends Actor{
 
