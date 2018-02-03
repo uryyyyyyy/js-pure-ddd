@@ -4,10 +4,7 @@ import {Counter} from './Counter';
 import {CounterService, Events} from '../../domain/services/CounterService';
 import 'rxjs/add/operator/skip'
 import {Count} from '../../domain/entities/Count';
-
-interface Props {
-  counterService: CounterService
-}
+import {getCounterService} from '../../context';
 
 interface State {
   count: Count
@@ -15,19 +12,20 @@ interface State {
   counterService: CounterService
 }
 
-export class Presenter extends React.Component<Props, State> {
+export class Presenter extends React.Component<{}, State> {
 
-  constructor(props: Props) {
+  constructor(props: {}) {
     super(props)
+    const counterService = getCounterService()
     this.state = {
       loadingCount: 0,
-      count: props.counterService.getCount(),
-      counterService: props.counterService
+      count: counterService.getCount(),
+      counterService: counterService
     }
-    props.counterService.getCountObservable().skip(1)
+    counterService.getCountObservable().skip(1)
       .subscribe((count: Count) => this.setState({count}))
 
-    props.counterService.getEventsObservable()
+    counterService.getEventsObservable()
       .subscribe((event: Events) => {
         switch (event){
           case Events.REQUEST_START: {
