@@ -1,10 +1,25 @@
 import {Observable} from 'rxjs/Observable'
 import {CountRepository} from '../repositories';
 import {Count} from '../entities/Count';
+import {inject, injectable} from 'inversify';
+import {TYPES} from '../../di-types';
+import {Subject} from 'rxjs/Subject';
 
+export enum Events {
+  REQUEST_START,
+  REQUEST_FINISH,
+  SAVE_SUCCESS,
+  SAVE_FAIL
+}
+
+@injectable()
 export class CounterService {
 
-  constructor(private countRepository: CountRepository) {}
+  private eventObservable: Subject<Events>
+
+  constructor(@inject(TYPES.CountRepository) private countRepository: CountRepository) {
+    this.eventObservable = new Subject<Events>()
+  }
 
   /**
    * increment counter value
@@ -25,15 +40,19 @@ export class CounterService {
   /**
    * async increment value
    */
-  reload(): Promise<void> {
-    return this.countRepository.fetchCount().then(() => {return})
+  reload(): void {
+    this.eventObservable.next(Events.REQUEST_START)
+    this.countRepository.fetchCount()
+      .finally(() => this.eventObservable.next(Events.REQUEST_FINISH))
   }
 
   /**
    * save count value
    */
-  save(): Promise<void> {
-    return this.countRepository.saveToServer()
+  save(): void {
+    this.countRepository.saveToServer()
+      .then(() => this.eventObservable.next(Events.SAVE_SUCCESS))
+      .catch(() => this.eventObservable.next(Events.SAVE_FAIL))
   }
 
   /**
@@ -48,5 +67,12 @@ export class CounterService {
    */
   getCountObservable(): Observable<Count> {
     return this.countRepository.getCountObservable()
+  }
+
+  /**
+   * get events observable
+   */
+  getEventsObservable(): Observable<Events> {
+    return this.eventObservable.asObservable()
   }
 }

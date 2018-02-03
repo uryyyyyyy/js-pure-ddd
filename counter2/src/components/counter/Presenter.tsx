@@ -1,7 +1,7 @@
 import 'promise.prototype.finally'
 import * as React from 'react'
 import {Counter} from './Counter';
-import {CounterService} from '../../domain/services/CounterService';
+import {CounterService, Events} from '../../domain/services/CounterService';
 import 'rxjs/add/operator/skip'
 import {Count} from '../../domain/entities/Count';
 
@@ -26,6 +26,24 @@ export class Presenter extends React.Component<Props, State> {
     }
     props.counterService.getCountObservable().skip(1)
       .subscribe((count: Count) => this.setState({count}))
+
+    props.counterService.getEventsObservable()
+      .subscribe((event: Events) => {
+        switch (event){
+          case Events.REQUEST_START: {
+            return this.setState({loadingCount: this.state.loadingCount + 1})
+          }
+          case Events.REQUEST_FINISH: {
+            return this.setState({loadingCount: this.state.loadingCount - 1})
+          }
+          case Events.SAVE_SUCCESS: {
+            return alert('save done')
+          }
+          case Events.SAVE_FAIL: {
+            return alert('save fail')
+          }
+        }
+      })
   }
 
   componentDidMount() {
@@ -40,17 +58,9 @@ export class Presenter extends React.Component<Props, State> {
     this.state.counterService.decrement(amount)
   }
 
-  save = () => {
-    this.state.counterService.save()
-      .then(() => alert('save done'))
-      .catch(() => alert('save fail'))
-  }
+  save = () => this.state.counterService.save()
 
-  reload = () => {
-    this.setState({loadingCount: this.state.loadingCount + 1})
-    this.state.counterService.reload()
-      .finally(() => this.setState({loadingCount: this.state.loadingCount - 1}))
-  }
+  reload = () => this.state.counterService.reload()
 
   render() {
     return (
