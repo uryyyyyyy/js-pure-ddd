@@ -1,7 +1,6 @@
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
 import {Presenter} from './components/counter/Presenter'
-import 'reflect-metadata'
 import {CounterService} from './domain/services/CounterService';
 import {AppContext} from './context';
 

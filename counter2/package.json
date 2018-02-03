@@ -5,22 +5,27 @@
   "scripts": {
     "build": "webpack --config webpack.config.dev.js",
     "build:watch": "webpack --config webpack.config.dev.js --watch",
-    "build:prod": "webpack --config webpack.config.prod.js"
+    "build:prod": "webpack --config webpack.config.prod.js",
+    "server": "node dev-server.es6"
   },
   "devDependencies": {
+    "@types/promise.prototype.finally": "2.0.2",
     "@types/react": "16.0.36",
     "@types/react-dom": "16.0.3",
+    "body-parser": "^1.18.2",
+    "express": "4.16.2",
     "ts-loader": "4.0.0-beta.0",
     "typescript": "2.7.1",
     "webpack": "4.0.0-beta.0",
     "webpack-cli": "2.0.4"
   },
   "dependencies": {
-    "deep-equal": "^1.0.1",
-    "inversify": "^4.10.0",
+    "deep-equal": "1.0.1",
+    "inversify": "4.10.0",
+    "promise.prototype.finally": "3.1.0",
     "react": "16.2.0",
     "react-dom": "16.2.0",
-    "reflect-metadata": "^0.1.12",
-    "rxjs": "^5.5.6"
+    "reflect-metadata": "0.1.12",
+    "rxjs": "5.5.6"
   }
 }

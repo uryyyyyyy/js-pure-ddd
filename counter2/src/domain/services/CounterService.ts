@@ -23,6 +23,20 @@ export class CounterService {
   }
 
   /**
+   * async increment value
+   */
+  reload(): Promise<void> {
+    return this.countRepository.fetchCount().then(() => {return})
+  }
+
+  /**
+   * save count value
+   */
+  save(): Promise<void> {
+    return this.countRepository.saveToServer()
+  }
+
+  /**
    * get current count
    */
   getCount(): Count {

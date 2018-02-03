@@ -3,7 +3,7 @@ import {Observable} from 'rxjs/Observable';
 
 export interface CountRepository {
   /**
-   * save to storage
+   * save to local
    */
   save(count: Count): void
 
@@ -11,6 +11,16 @@ export interface CountRepository {
    * get current count
    */
   getCount(): Count
+
+  /**
+   * get current count
+   */
+  fetchCount(): Promise<Count>
+
+  /**
+   * save to server
+   */
+  saveToServer(): Promise<void>
 
   /**
    * get count observable
