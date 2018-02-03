@@ -6,8 +6,6 @@ import {CountRepositoryImpl} from './infra/CountRepositoryImpl';
 import {bootstrap} from './bootstrap'
 
 const myContainer = new Container();
-myContainer.bind<CountRepository>(TYPES.CountRepository).to(CountRepositoryImpl);
+myContainer.bind<CountRepository>(TYPES.CountRepository).to(CountRepositoryImpl).inSingletonScope();
 
-const countRepository = myContainer.get<CountRepository>(TYPES.CountRepository);
-
-bootstrap({countRepository})
+bootstrap()
