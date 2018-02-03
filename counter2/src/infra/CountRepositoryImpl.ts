@@ -1,13 +1,16 @@
 import {BehaviorSubject} from 'rxjs/BehaviorSubject'
 import {Observable} from 'rxjs/Observable'
-import {Count} from '../entities/Count'
+import {Count} from '../domain/entities/Count'
+import {CountRepository} from '../domain/repositories';
+import {injectable} from 'inversify';
 
-export class CountRepository {
+@injectable()
+export class CountRepositoryImpl implements CountRepository {
 
   private count: BehaviorSubject<Count>
 
-  constructor(count: Count) {
-    this.count = new BehaviorSubject(count)
+  constructor() {
+    this.count = new BehaviorSubject(new Count(0))
   }
 
   /**

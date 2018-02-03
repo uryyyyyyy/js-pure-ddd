@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {Count} from '../../entities/Count';
+import {Count} from '../../domain/entities/Count';
 
 interface Props {
   count: Count

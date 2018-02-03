@@ -1,8 +1,8 @@
 import * as React from 'react'
 import {Counter} from './Counter';
-import {CounterService} from '../../services/CounterService';
+import {CounterService} from '../../domain/services/CounterService';
 import 'rxjs/add/operator/skip'
-import {Count} from '../../entities/Count';
+import {Count} from '../../domain/entities/Count';
 
 interface Props {
   counterService: CounterService
@@ -18,7 +18,11 @@ export class Presenter extends React.Component<Props, State> {
 
   constructor(props: Props) {
     super(props)
-    this.state = { isLoading: false, count: new Count(0), counterService: props.counterService}
+    this.state = {
+      isLoading: false,
+      count: props.counterService.getCount(),
+      counterService: props.counterService
+    }
     props.counterService.getCountObservable().skip(1)
       .subscribe((count: Count) => this.setState({count}))
   }

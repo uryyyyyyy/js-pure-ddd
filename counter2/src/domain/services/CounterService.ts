@@ -1,5 +1,5 @@
 import {Observable} from 'rxjs/Observable'
-import {CountRepository} from '../repositories/CountRepository';
+import {CountRepository} from '../repositories';
 import {Count} from '../entities/Count';
 
 export class CounterService {

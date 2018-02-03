@@ -3,7 +3,7 @@
 module.exports = {
   mode: 'development',
   devtool: 'source-map',
-  entry: './src/Index.tsx',
+  entry: './src/dev-bootstrap.ts',
   module: {
     rules: [
       {
