@@ -1,39 +1,35 @@
-import {BehaviorSubject} from 'rxjs/BehaviorSubject'
 import {Observable} from 'rxjs/Observable'
+import {CountRepository} from '../repositories/CountRepository';
 
 export class CounterService {
 
-  private countSubject: BehaviorSubject<number>
-
-  constructor(amount: number) {
-    this.countSubject = new BehaviorSubject(amount);
-  }
+  constructor(private countRepository: CountRepository) {}
 
   /**
    * increment counter value
    */
   increment(amount: number): void {
-    this.countSubject.next(this.countSubject.value + amount)
+    this.countRepository.save(this.countRepository.getCount() + amount)
   }
 
   /**
    * decrement counter value
    */
   decrement(amount: number): void {
-    this.countSubject.next(this.countSubject.value - amount)
+    this.countRepository.save(this.countRepository.getCount() - amount)
   }
 
   /**
    * get current count
    */
   getCount(): number {
-    return this.countSubject.value
+    return this.countRepository.getCount()
   }
 
   /**
    * get count observable
    */
   getCountObservable(): Observable<number> {
-    return this.countSubject
+    return this.countRepository.getCountObservable()
   }
 }
