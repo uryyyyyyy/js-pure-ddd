@@ -1,32 +1,33 @@
 import {BehaviorSubject} from 'rxjs/BehaviorSubject'
 import {Observable} from 'rxjs/Observable'
+import {Count} from '../entities/Count'
 
 export class CountRepository {
 
-  private count: BehaviorSubject<number>
+  private count: BehaviorSubject<Count>
 
-  constructor(amount: number) {
-    this.count = new BehaviorSubject(amount)
+  constructor(count: Count) {
+    this.count = new BehaviorSubject(count)
   }
 
   /**
    * save to storage
    */
-  save(amount: number): void {
-    this.count.next(amount)
+  save(count: Count): void {
+    this.count.next(count)
   }
 
   /**
    * get current count
    */
-  getCount(): number {
+  getCount(): Count {
     return this.count.value
   }
 
   /**
    * get count observable
    */
-  getCountObservable(): Observable<number> {
+  getCountObservable(): Observable<Count> {
     return this.count
   }
 }

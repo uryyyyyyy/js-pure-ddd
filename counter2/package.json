@@ -16,6 +16,7 @@
     "webpack-cli": "2.0.4"
   },
   "dependencies": {
+    "deep-equal": "^1.0.1",
     "inversify": "^4.10.0",
     "react": "16.2.0",
     "react-dom": "16.2.0",

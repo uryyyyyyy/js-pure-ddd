@@ -1,5 +1,6 @@
 import {Observable} from 'rxjs/Observable'
 import {CountRepository} from '../repositories/CountRepository';
+import {Count} from '../entities/Count';
 
 export class CounterService {
 
@@ -9,27 +10,29 @@ export class CounterService {
    * increment counter value
    */
   increment(amount: number): void {
-    this.countRepository.save(this.countRepository.getCount() + amount)
+    const current = this.countRepository.getCount()
+    this.countRepository.save(current.increment(amount))
   }
 
   /**
    * decrement counter value
    */
   decrement(amount: number): void {
-    this.countRepository.save(this.countRepository.getCount() - amount)
+    const current = this.countRepository.getCount()
+    this.countRepository.save(current.decrement(amount))
   }
 
   /**
    * get current count
    */
-  getCount(): number {
+  getCount(): Count {
     return this.countRepository.getCount()
   }
 
   /**
    * get count observable
    */
-  getCountObservable(): Observable<number> {
+  getCountObservable(): Observable<Count> {
     return this.countRepository.getCountObservable()
   }
 }
