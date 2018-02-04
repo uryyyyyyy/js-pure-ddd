@@ -1,7 +1,7 @@
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
-import Counter from './components/counter/Presenter'
+import {CounterContainer} from './components/counter/Container'
 
 export const bootstrap = () => {
-  ReactDOM.render(<Counter />, document.getElementById('app'));
+  ReactDOM.render(<CounterContainer />, document.getElementById('app'));
 }

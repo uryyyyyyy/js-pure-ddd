@@ -1,21 +1,17 @@
 import * as React from 'react'
-import {Count} from '../../domain/entities/Count';
+import {CounterViewModelNavigator, CounterViewModelState} from './ViewModel';
 
 interface Props {
-  count: Count
-  increment: (amount: number) => void
-  decrement: (amount: number) => void
-  reload: () => void
-  save: () => void
-  loadingCount: number
+  navigator: CounterViewModelNavigator
+  state: CounterViewModelState
 }
 
 export const Counter: React.StatelessComponent<Props> = (props: Props) =>
   <div>
-    <p>{`score: ${props.count.getValue()}`}</p>
-    <button onClick={() => props.increment(3)}>Increment 3</button>
-    <button onClick={() => props.decrement(2)}>Decrement 2</button>
-    <button onClick={() => props.save()}>save</button>
-    <button onClick={() => props.reload()}>reload</button>
-    {(props.loadingCount === 0) ? null : <p>loading</p>}
+    <p>{`count: ${props.state.count.getValue()}`}</p>
+    <button onClick={() => props.navigator.increment(3)}>Increment 3</button>
+    <button onClick={() => props.navigator.decrement(2)}>Decrement 2</button>
+    <button onClick={() => props.navigator.save()}>save</button>
+    <button onClick={() => props.navigator.reload()}>reload</button>
+    {(props.state.loadingCount === 0) ? null : <p>loading</p>}
   </div>
