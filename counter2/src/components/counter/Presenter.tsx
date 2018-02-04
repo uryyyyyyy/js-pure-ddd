@@ -6,26 +6,27 @@ import 'rxjs/add/operator/skip'
 import {Count} from '../../domain/entities/Count';
 import {getCounterService} from '../../context';
 
-interface State {
-  count: Count
-  loadingCount: number
+interface Props {
   counterService: CounterService
 }
 
-export class Presenter extends React.Component<{}, State> {
+interface State {
+  count: Count
+  loadingCount: number
+}
 
-  constructor(props: {}) {
+export class Presenter extends React.Component<Props, State> {
+
+  constructor(props: Props) {
     super(props)
-    const counterService = getCounterService()
     this.state = {
       loadingCount: 0,
-      count: counterService.getCount(),
-      counterService: counterService
+      count: props.counterService.getCount(),
     }
-    counterService.getCountObservable().skip(1)
+    props.counterService.getCountObservable().skip(1)
       .subscribe((count: Count) => this.setState({count}))
 
-    counterService.getEventsObservable()
+    props.counterService.getEventsObservable()
       .subscribe((event: Events) => {
         switch (event){
           case Events.REQUEST_START: {
@@ -49,16 +50,16 @@ export class Presenter extends React.Component<{}, State> {
   }
 
   increment = (amount: number) => {
-    this.state.counterService.increment(amount)
+    this.props.counterService.increment(amount)
   }
 
   decrement = (amount: number) => {
-    this.state.counterService.decrement(amount)
+    this.props.counterService.decrement(amount)
   }
 
-  save = () => this.state.counterService.save()
+  save = () => this.props.counterService.save()
 
-  reload = () => this.state.counterService.reload()
+  reload = () => this.props.counterService.reload()
 
   render() {
     return (
@@ -73,3 +74,5 @@ export class Presenter extends React.Component<{}, State> {
     )
   }
 }
+
+export default () => <Presenter counterService={getCounterService()}/>

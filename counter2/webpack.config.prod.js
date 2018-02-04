@@ -2,7 +2,7 @@
 
 module.exports = {
   mode: 'production',
-  entry: './src/./src/prod-bootstrap.ts',
+  entry: './src/prod-bootstrap.ts',
   module: {
     rules: [
       {
