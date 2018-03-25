@@ -1,7 +1,7 @@
 import 'promise.prototype.finally'
 import * as React from 'react'
 import 'rxjs/add/operator/skip'
-import {getCounterViewModel} from '../../context';
+import {getCounterViewModel} from '../../context/context';
 import {CounterViewModel, CounterViewModelState} from './ViewModel';
 import {Counter} from './Counter';
 
@@ -17,20 +17,20 @@ export class CounterContainer extends React.Component<{}, State> {
     const viewModel = getCounterViewModel()
     this.state = {
       viewModel: viewModel,
-      viewModelState: viewModel.state.getValue()
+      viewModelState: viewModel.getStateStream().getValue()
     }
-    viewModel.state.skip(1).subscribe((viewModelState: CounterViewModelState) => {
+    viewModel.getStateStream().skip(1).subscribe((viewModelState: CounterViewModelState) => {
       this.setState({viewModelState})
     })
   }
 
   componentWillMount(){
-    this.state.viewModel.reload()
+
   }
 
   render(){
     return (<Counter
-      navigator={this.state.viewModel}
+      viewModel={this.state.viewModel}
       state={this.state.viewModelState}
     />)
   }
