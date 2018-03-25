@@ -27,7 +27,7 @@ export class CountSessionRepositoryImpl implements CountSessionRepository {
 
   private countBSubject: BehaviorSubject<Count>
 
-  // 更新をシーケンシャルにするために使う。（JSだとそもそもシーケンシャル）
+  // 更新を明示的にシーケンシャルにするために使う。（JSだとそもそもSingleThreadだが）
   private updateStream: Subject<Actions>
 
   constructor() {

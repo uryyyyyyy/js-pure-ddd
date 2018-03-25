@@ -12,9 +12,12 @@ import {CountPersistRepositoryLS} from './infra/CountPersistRepositoryLS';
 
 container.bind<CountSessionRepository>(TYPES.CountSessionRepository).to(CountSessionRepositoryImpl).inSingletonScope();
 container.bind<CountPersistRepository>(TYPES.CountPersistRepository).to(CountPersistRepositoryLS).inSingletonScope();
-container.bind<CounterViewModel>(TYPES.CounterViewModel).to(CounterViewModelImpl).inSingletonScope();
+container.bind<CounterViewModel>(TYPES.CounterViewModel).to(CounterViewModelImpl);
 
 ReactDOM.render(<>
-  <CounterContainer />
-  <CounterContainer />
-</>, document.getElementById('app'));
+    <CounterContainer />
+    <p> </p>
+    <p> </p>
+    <p> </p>
+    <CounterContainer />
+  </>, document.getElementById('app'));
