@@ -15,7 +15,12 @@ interface DecrementAction {
   num: number
 }
 
-export type Actions = IncrementAction | DecrementAction;
+interface UpdateAction {
+  type: 'UPDATE';
+  count: Count
+}
+
+export type Actions = IncrementAction | DecrementAction | UpdateAction;
 
 @injectable()
 export class CountSessionRepositoryImpl implements CountSessionRepository {
@@ -28,16 +33,19 @@ export class CountSessionRepositoryImpl implements CountSessionRepository {
   constructor() {
     this.countBSubject = new BehaviorSubject(new Count(0))
     this.updateStream = new Subject()
-    this.updateStream.forEach((e: Actions) => this.update(e))
+    this.updateStream.forEach((e: Actions) => this._update(e))
   }
 
-  private update(e: Actions): void {
+  private _update(e: Actions): void {
     switch (e.type){
       case 'INCREMENT':
         this.countBSubject.next(this.countBSubject.value.increment(e.num))
         break;
       case 'DECREMENT':
         this.countBSubject.next(this.countBSubject.value.decrement(e.num))
+        break;
+      case 'UPDATE':
+        this.countBSubject.next(e.count)
         break;
       default:
         const _e: never = e;
@@ -66,6 +74,14 @@ export class CountSessionRepositoryImpl implements CountSessionRepository {
     const event: DecrementAction = {
       type: 'DECREMENT',
       num
+    }
+    this.updateStream.next(event)
+  }
+
+  update(count: Count): void {
+    const event: UpdateAction = {
+      type: 'UPDATE',
+      count
     }
     this.updateStream.next(event)
   }

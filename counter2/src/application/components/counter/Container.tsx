@@ -25,7 +25,7 @@ export class CounterContainer extends React.Component<{}, State> {
   }
 
   componentWillMount(){
-
+    this.state.viewModel.reload()
   }
 
   render(){
