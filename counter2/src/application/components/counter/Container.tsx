@@ -17,7 +17,7 @@ export class CounterContainer extends React.Component<{}, State> {
     const viewModel = getCounterViewModel()
     this.state = {
       viewModel: viewModel,
-      viewModelState: viewModel.getStateStream().getValue()
+      viewModelState: viewModel.getState()
     }
     viewModel.getStateStream().skip(1).subscribe((viewModelState: CounterViewModelState) => {
       this.setState({viewModelState})

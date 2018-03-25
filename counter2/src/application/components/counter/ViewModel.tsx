@@ -3,8 +3,9 @@ import 'rxjs/add/operator/skip'
 import {Count} from '../../../domain/entities/Count';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {inject, injectable} from 'inversify';
-import {CountSessionRepository} from '../../infra/CountSessionRepository';
 import {TYPES} from '../../context/di-types';
+import {CountSessionRepository} from '../../../domain/repository/CountSessionRepository';
+import {Observable} from 'rxjs/Observable';
 
 export interface CounterViewModelState {
   count: number
@@ -14,7 +15,8 @@ export interface CounterViewModelState {
 export interface CounterViewModel {
   increment(amount: number): void
   decrement(amount: number):void
-  getStateStream(): BehaviorSubject<CounterViewModelState>
+  getStateStream(): Observable<CounterViewModelState>
+  getState(): CounterViewModelState
 }
 
 @injectable()
@@ -42,7 +44,11 @@ export class CounterViewModelImpl implements CounterViewModel {
     this.counterRepository.decrement(amount)
   }
 
-  getStateStream(): BehaviorSubject<CounterViewModelState> {
-    return this.state
+  getStateStream(): Observable<CounterViewModelState> {
+    return this.state.asObservable()
+  }
+
+  getState(): CounterViewModelState {
+    return this.state.getValue();
   }
 }

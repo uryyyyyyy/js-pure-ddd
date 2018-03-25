@@ -1,9 +1,9 @@
 import {BehaviorSubject} from 'rxjs/BehaviorSubject'
 import {Observable} from 'rxjs/Observable'
 import {Count} from '../../domain/entities/Count'
-import {SessionRepository} from '../../domain/repository/SessionRepository';
 import {Subject} from 'rxjs/Subject';
 import {injectable} from 'inversify';
+import {CountSessionRepository} from '../../domain/repository/CountSessionRepository';
 
 interface IncrementAction {
   type: 'INCREMENT';
@@ -16,11 +16,6 @@ interface DecrementAction {
 }
 
 export type Actions = IncrementAction | DecrementAction;
-
-export interface CountSessionRepository extends SessionRepository<Count> {
-  increment(num: number): void
-  decrement(num: number): void
-}
 
 @injectable()
 export class CountSessionRepositoryImpl implements CountSessionRepository {
