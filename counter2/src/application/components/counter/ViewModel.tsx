@@ -133,15 +133,15 @@ export class CounterViewModelImpl implements CounterViewModel {
     this.countPRepo.fetchCount()
       .then(count => this.countSRepo.update(count))
       .catch(e => console.error(e))
-      .finally(() => {
-        this.updateStream.next({type: 'LC_DECREMENT'})
-      })
+      .finally(() => this.updateStream.next({type: 'LC_DECREMENT'}))
   }
 
   save(): void {
+    this.updateStream.next({type: 'LC_INCREMENT'})
     const current = this.state.getValue()
     this.countPRepo.saveCount(new Count(current.count))
       .then(() => window.alert('セーブしました'))
       .catch(e => console.error(e))
+      .finally(() => this.updateStream.next({type: 'LC_DECREMENT'}))
   }
 }

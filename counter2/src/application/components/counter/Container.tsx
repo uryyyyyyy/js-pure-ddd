@@ -19,9 +19,8 @@ export class CounterContainer extends React.Component<{}, State> {
       viewModel: viewModel,
       viewModelState: viewModel.getState()
     }
-    viewModel.getStateStream().skip(1).subscribe((viewModelState: CounterViewModelState) => {
-      this.setState({viewModelState})
-    })
+    viewModel.getStateStream().skip(1)
+      .subscribe(viewModelState => this.setState({viewModelState}))
   }
 
   componentWillMount(){
