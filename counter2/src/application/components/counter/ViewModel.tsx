@@ -6,7 +6,7 @@ import {inject, injectable} from 'inversify';
 import {TYPES} from '../../context/di-types';
 import {CountSessionRepository} from '../../../domain/repository/CountSessionRepository';
 import {Observable} from 'rxjs/Observable';
-import {CountPersistRepository} from '../../../domain/repository/CountPersistRepository';
+import {CountPersistRepository, isFail} from '../../../domain/repository/CountPersistRepository';
 import {Subject} from 'rxjs/Subject';
 
 export interface CounterViewModelState {
@@ -140,8 +140,17 @@ export class CounterViewModelImpl implements CounterViewModel {
     this.updateStream.next({type: 'LC_INCREMENT'})
     const current = this.state.getValue()
     this.countPRepo.saveCount(new Count(current.count))
-      .then(() => window.alert('セーブしました'))
-      .catch(e => console.error(e))
+      .then((result) => {
+        if(isFail(result)) {
+          window.alert(result.err.message)
+        } else {
+          window.alert('セーブしました')
+        }
+      })
+      .catch(e => {
+        console.error(e)
+        window.alert('サーバーに繋がりませんでした')
+      })
       .finally(() => this.updateStream.next({type: 'LC_DECREMENT'}))
   }
 }

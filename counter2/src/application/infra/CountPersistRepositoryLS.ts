@@ -1,5 +1,5 @@
 import {injectable} from 'inversify';
-import {CountPersistRepository} from '../../domain/repository/CountPersistRepository';
+import {CountPersistRepository, Fail} from '../../domain/repository/CountPersistRepository';
 import {Count} from '../../domain/entities/Count';
 
 const countKey = 'COUNT'
@@ -9,12 +9,12 @@ export class CountPersistRepositoryLS implements CountPersistRepository {
 
   constructor() {}
 
-  saveCount(count: Count): Promise<void> {
+  saveCount(count: Count): Promise<void | Fail> {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         Number(localStorage.setItem(countKey, count.getValue().toString()))
         resolve();
-      }, 100);
+      }, 1000);
     })
   }
 
