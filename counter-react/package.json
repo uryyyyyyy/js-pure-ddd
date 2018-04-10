@@ -10,22 +10,22 @@
   },
   "devDependencies": {
     "@types/promise.prototype.finally": "2.0.2",
-    "@types/react": "16.0.36",
-    "@types/react-dom": "16.0.3",
-    "body-parser": "^1.18.2",
-    "express": "4.16.2",
-    "ts-loader": "4.0.0-beta.0",
-    "typescript": "2.7.1",
-    "webpack": "4.0.0-beta.0",
-    "webpack-cli": "2.0.4"
+    "@types/react": "16.3.6",
+    "@types/react-dom": "16.0.4",
+    "body-parser": "1.18.2",
+    "express": "4.16.3",
+    "ts-loader": "4.2.0",
+    "typescript": "2.8.1",
+    "webpack": "4.5.0",
+    "webpack-cli": "2.0.14"
   },
   "dependencies": {
     "deep-equal": "1.0.1",
-    "inversify": "4.10.0",
+    "inversify": "4.11.1",
     "promise.prototype.finally": "3.1.0",
-    "react": "16.2.0",
-    "react-dom": "16.2.0",
+    "react": "16.3.1",
+    "react-dom": "16.3.1",
     "reflect-metadata": "0.1.12",
-    "rxjs": "5.5.6"
+    "rxjs": "5.5.8"
   }
 }
