@@ -9,7 +9,6 @@
     "alwaysStrict": true,
     "noImplicitAny": true,
     "strictFunctionTypes": true,
-    "strictPropertyInitialization": true,
     "moduleResolution": "node",
     "outDir": "./dist/",
     "sourceMap": true,

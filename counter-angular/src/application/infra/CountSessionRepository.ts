@@ -1,4 +1,4 @@
-import { BehaviorSubject, Observable, Subject } from 'rxjs'
+import { BehaviorSubject, Subject } from 'rxjs'
 import { Count } from '../../domain/entities/Count'
 import { CountVolatileRepository } from '../../domain/repository/CountVolatileRepository'
 import { Injectable } from '@angular/core'
@@ -21,13 +21,14 @@ interface UpdateAction {
 export type Actions = IncrementAction | DecrementAction | UpdateAction
 
 @Injectable()
-export class CountVolatileRepositoryImpl implements CountVolatileRepository {
-  private countBSubject: BehaviorSubject<Count>
+export class CountVolatileRepositoryImpl extends CountVolatileRepository {
+  private readonly countBSubject: BehaviorSubject<Count>
 
   // 更新を明示的にシーケンシャルにするために使う。（JSだとそもそもSingleThreadだが）
   private updateStream: Subject<Actions>
 
   constructor() {
+    super()
     this.countBSubject = new BehaviorSubject(new Count(0))
     this.updateStream = new Subject()
     this.updateStream.forEach((e: Actions) => this._update(e))
@@ -51,15 +52,15 @@ export class CountVolatileRepositoryImpl implements CountVolatileRepository {
     }
   }
 
-  getState(): Count {
+  getState = () => {
     return this.countBSubject.getValue()
   }
 
-  getStateObservable(): Observable<Count> {
+  getStateObservable = () => {
     return this.countBSubject
   }
 
-  increment(num: number): void {
+  increment = (num: number) => {
     const event: IncrementAction = {
       type: 'INCREMENT',
       num
@@ -67,7 +68,7 @@ export class CountVolatileRepositoryImpl implements CountVolatileRepository {
     this.updateStream.next(event)
   }
 
-  decrement(num: number): void {
+  decrement = (num: number) => {
     const event: DecrementAction = {
       type: 'DECREMENT',
       num
@@ -75,7 +76,7 @@ export class CountVolatileRepositoryImpl implements CountVolatileRepository {
     this.updateStream.next(event)
   }
 
-  update(count: Count): void {
+  update = (count: Count) => {
     const event: UpdateAction = {
       type: 'UPDATE',
       count

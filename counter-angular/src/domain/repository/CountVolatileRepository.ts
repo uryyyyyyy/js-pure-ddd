@@ -1,23 +1,13 @@
 import { Count } from '../entities/Count'
-import { VolatileRepository } from './VolatileRepository'
 import { Observable } from 'rxjs'
+import {VolatileRepository} from './VolatileRepository';
 
-export class CountVolatileRepository implements VolatileRepository<Count> {
-  increment(num: number): void {
-    return num as any
-  }
-  decrement(num: number): void {
-    return num as any
-  }
-  update(count: Count): void {
-    return count as any
-  }
+export abstract class CountVolatileRepository implements VolatileRepository<Count> {
+  increment: (num: number) => void
+  decrement: (num: number) => void
+  update: (count: Count) => void
 
-  getState(): Count {
-    return null as any
-  }
+  getState: () => Count
 
-  getStateObservable(): Observable<Count> {
-    return null as any
-  }
+  getStateObservable: () => Observable<Count>
 }
