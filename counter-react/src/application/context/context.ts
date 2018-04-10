@@ -1,8 +1,10 @@
 import "reflect-metadata";
 import { Container } from "inversify";
 import {TYPES} from './di-types';
-import {CounterViewModel} from '../components/counter/ViewModel';
+import {CountSessionRepository} from "../../domain/repository/CountSessionRepository";
+import {CountPersistRepository} from "../../domain/repository/CountPersistRepository";
 
 export const container = new Container();
 
-export const getCounterViewModel = () => container.get<CounterViewModel>(TYPES.CounterViewModel);
+export const getCountSessionRepository = () => container.get<CountSessionRepository>(TYPES.CountSessionRepository);
+export const getCountPersistRepository = () => container.get<CountPersistRepository>(TYPES.CountPersistRepository);

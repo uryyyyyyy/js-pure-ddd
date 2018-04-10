@@ -2,8 +2,6 @@ import 'promise.prototype.finally'
 import 'rxjs/add/operator/skip'
 import {Count} from '../../../domain/entities/Count';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {inject, injectable} from 'inversify';
-import {TYPES} from '../../context/di-types';
 import {CountSessionRepository} from '../../../domain/repository/CountSessionRepository';
 import {Observable} from 'rxjs/Observable';
 import {CountPersistRepository, isFail} from '../../../domain/repository/CountPersistRepository';
@@ -55,7 +53,6 @@ export type Actions = LCIncrementAction |
   InternalCountIncrementAction |
   InternalCountDecrementAction
 
-@injectable()
 export class CounterViewModelImpl implements CounterViewModel {
 
   private state: BehaviorSubject<CounterViewModelState>
@@ -64,8 +61,8 @@ export class CounterViewModelImpl implements CounterViewModel {
   private updateStream: Subject<Actions>
 
   constructor(
-    @inject(TYPES.CountSessionRepository) private countSRepo: CountSessionRepository,
-    @inject(TYPES.CountPersistRepository) private countPRepo: CountPersistRepository
+    private countSRepo: CountSessionRepository,
+    private countPRepo: CountPersistRepository
   ) {
     this.state = new BehaviorSubject<CounterViewModelState>({
       loadingCount: 0,
