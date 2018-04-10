@@ -1,10 +1,10 @@
 import 'promise.prototype.finally'
 import 'rxjs/add/operator/skip'
-import {Count} from '../../../domain/entities/Count';
+import {Count} from '../../../../domain/entities/Count';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {CountVolatileRepository} from '../../../domain/repository/CountVolatileRepository';
+import {CountVolatileRepository} from '../../../../domain/repository/CountVolatileRepository';
 import {Observable} from 'rxjs/Observable';
-import {CountPersistRepository, isFail} from '../../../domain/repository/CountPersistRepository';
+import {CountPersistRepository, isFail} from '../../../../domain/repository/CountPersistRepository';
 import {Subject} from 'rxjs/Subject';
 
 export interface State {
