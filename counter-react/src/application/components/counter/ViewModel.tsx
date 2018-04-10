@@ -2,7 +2,7 @@ import 'promise.prototype.finally'
 import 'rxjs/add/operator/skip'
 import {Count} from '../../../domain/entities/Count';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {CountSessionRepository} from '../../../domain/repository/CountSessionRepository';
+import {CountVolatileRepository} from '../../../domain/repository/CountVolatileRepository';
 import {Observable} from 'rxjs/Observable';
 import {CountPersistRepository, isFail} from '../../../domain/repository/CountPersistRepository';
 import {Subject} from 'rxjs/Subject';
@@ -61,7 +61,7 @@ export class CounterViewModelImpl implements ViewModel {
   private updateStream: Subject<Actions>
 
   constructor(
-    private countSRepo: CountSessionRepository,
+    private countSRepo: CountVolatileRepository,
     private countPRepo: CountPersistRepository
   ) {
     this.state = new BehaviorSubject<State>({

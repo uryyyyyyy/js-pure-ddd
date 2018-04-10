@@ -3,7 +3,7 @@ import {Observable} from 'rxjs/Observable'
 import {Count} from '../../domain/entities/Count'
 import {Subject} from 'rxjs/Subject';
 import {injectable} from 'inversify';
-import {CountSessionRepository} from '../../domain/repository/CountSessionRepository';
+import {CountVolatileRepository} from '../../domain/repository/CountVolatileRepository';
 
 interface IncrementAction {
   type: 'INCREMENT';
@@ -23,7 +23,7 @@ interface UpdateAction {
 export type Actions = IncrementAction | DecrementAction | UpdateAction;
 
 @injectable()
-export class CountSessionRepositoryImpl implements CountSessionRepository {
+export class CountVolatileRepositoryImpl implements CountVolatileRepository {
 
   private countBSubject: BehaviorSubject<Count>
 

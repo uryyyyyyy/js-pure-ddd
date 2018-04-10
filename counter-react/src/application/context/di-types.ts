@@ -1,4 +1,4 @@
 export const TYPES = {
-  CountSessionRepository: Symbol.for("CountSessionRepository"),
+  CountVolatileRepository: Symbol.for("CountVolatileRepository"),
   CountPersistRepository: Symbol.for("CountPersistRepository")
 };
