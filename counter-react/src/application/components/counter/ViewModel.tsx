@@ -7,19 +7,19 @@ import {Observable} from 'rxjs/Observable';
 import {CountPersistRepository, isFail} from '../../../domain/repository/CountPersistRepository';
 import {Subject} from 'rxjs/Subject';
 
-export interface CounterViewModelState {
+export interface State {
   count: number
   internalCount: number
   loadingCount: number
 }
 
-export interface CounterViewModel {
+export interface ViewModel {
   increment(amount: number): void
   decrement(amount: number):void
   internalIncrement(amount: number): void
   internalDecrement(amount: number):void
-  getStateStream(): Observable<CounterViewModelState>
-  getState(): CounterViewModelState,
+  getStateStream(): Observable<State>
+  getState(): State,
   reload(): void
   save(): void
 }
@@ -53,9 +53,9 @@ export type Actions = LCIncrementAction |
   InternalCountIncrementAction |
   InternalCountDecrementAction
 
-export class CounterViewModelImpl implements CounterViewModel {
+export class CounterViewModelImpl implements ViewModel {
 
-  private state: BehaviorSubject<CounterViewModelState>
+  private state: BehaviorSubject<State>
 
   // 更新を明示的にシーケンシャルにするために使う。（JSだとそもそもSingleThreadだが）
   private updateStream: Subject<Actions>
@@ -64,7 +64,7 @@ export class CounterViewModelImpl implements CounterViewModel {
     private countSRepo: CountSessionRepository,
     private countPRepo: CountPersistRepository
   ) {
-    this.state = new BehaviorSubject<CounterViewModelState>({
+    this.state = new BehaviorSubject<State>({
       loadingCount: 0,
       internalCount: 0,
       count: countSRepo.getState().getValue(),
@@ -117,11 +117,11 @@ export class CounterViewModelImpl implements CounterViewModel {
     this.updateStream.next({type: 'I_COUNT_DECREMENT', num})
   }
 
-  getStateStream(): Observable<CounterViewModelState> {
+  getStateStream(): Observable<State> {
     return this.state.asObservable()
   }
 
-  getState(): CounterViewModelState {
+  getState(): State {
     return this.state.getValue();
   }
 

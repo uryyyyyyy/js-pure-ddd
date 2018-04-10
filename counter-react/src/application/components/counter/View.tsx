@@ -1,12 +1,12 @@
 import * as React from 'react'
-import {CounterViewModel, CounterViewModelImpl, CounterViewModelState} from './ViewModel';
+import {ViewModel, CounterViewModelImpl, State} from './ViewModel';
 import {getCountPersistRepository, getCountSessionRepository} from '../../context/context';
 
 interface Props {
-  viewModel: CounterViewModel
+  viewModel: ViewModel
 }
 
-export class View extends React.Component<Props, CounterViewModelState> {
+export class View extends React.Component<Props, State> {
 
   constructor(props: Props) {
     super(props)
