@@ -1,0 +1,52 @@
+{
+  "name": "angular-without-cli",
+  "version": "0.1.0",
+  "scripts": {
+    "build": "webpack --config config/webpack.dev.js",
+    "build:watch": "webpack --watch --config config/webpack.dev.js",
+    "build:prod": "webpack --config config/webpack.prod.js",
+    "server": "node ./config/dev-server.js",
+    "test:unit": "karma start karma.conf.js",
+    "test:all": "karma start karma.conf.js **/*.spec.ts",
+    "lint:unit": "tslint -c tslint.json",
+    "lint:all": "tslint -c tslint.json 'src/**/*.ts'",
+    "format-base": "prettier --config ./prettier.config.js",
+    "format-check:all": "npm run format-base -- --list-different 'src/**/*.ts'",
+    "format-check:unit": "npm run format-base -- --list-different",
+    "format:all": "npm run format-base -- --write ./prettier.config.js 'src/**/*.ts'",
+    "format:unit": "npm run format-base -- --write ./prettier.config.js"
+  },
+  "dependencies": {
+    "@angular/common": "5.2.9",
+    "@angular/compiler": "5.2.9",
+    "@angular/compiler-cli": "5.2.9",
+    "@angular/core": "5.2.9",
+    "@angular/platform-browser": "5.2.9",
+    "@angular/platform-browser-dynamic": "5.2.9",
+    "core-js": "2.5.4",
+    "rxjs": "5.5.8",
+    "zone.js": "0.8.23"
+  },
+  "devDependencies": {
+    "@ngtools/webpack": "1.10.2",
+    "@types/jasmine": "2.8.6",
+    "css-loader": "0.28.11",
+    "express": "4.16.3",
+    "html-loader": "0.5.5",
+    "jasmine-core": "3.1.0",
+    "karma": "2.0.0",
+    "karma-chrome-launcher": "2.2.0",
+    "karma-jasmine": "1.1.1",
+    "karma-mocha-reporter": "2.2.5",
+    "karma-webpack": "3.0.0",
+    "node-sass": "4.8.3",
+    "prettier": "1.11.1",
+    "sass-loader": "6.0.7",
+    "to-string-loader": "1.1.5",
+    "tslint": "5.9.1",
+    "tslint-config-standard": "7.0.0",
+    "typescript": "2.8.1",
+    "uglifyjs-webpack-plugin": "1.2.4",
+    "webpack": "3.11.0"
+  }
+}
