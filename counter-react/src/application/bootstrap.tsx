@@ -1,6 +1,5 @@
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
-import {CounterContainer} from './components/counter/Container'
 import "reflect-metadata";
 import {TYPES} from './context/di-types';
 import {CountSessionRepositoryImpl} from './infra/CountSessionRepository';
@@ -9,6 +8,7 @@ import {CountSessionRepository} from '../domain/repository/CountSessionRepositor
 import {CountPersistRepository} from '../domain/repository/CountPersistRepository';
 //import {CountPersistRepositoryLS} from './infra/CountPersistRepositoryLS';
 import {CountPersistRepositoryServer} from './infra/CountPersistRepositoryServer';
+import {CounterContainer} from "./components/counter/View";
 
 container.bind<CountSessionRepository>(TYPES.CountSessionRepository).to(CountSessionRepositoryImpl).inSingletonScope();
 //container.bind<CountPersistRepository>(TYPES.CountPersistRepository).to(CountPersistRepositoryLS).inSingletonScope();
