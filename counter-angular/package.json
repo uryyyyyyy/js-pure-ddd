@@ -20,8 +20,10 @@
     "@angular/core": "6.0.0-rc.3",
     "@angular/platform-browser": "6.0.0-rc.3",
     "@angular/platform-browser-dynamic": "6.0.0-rc.3",
+    "body-parser": "1.18.2",
     "core-js": "2.5.5",
     "deep-equal": "1.0.1",
+    "express": "4.16.3",
     "promise.prototype.finally": "3.1.0",
     "rxjs": "6.0.0-rc.0",
     "zone.js": "0.8.26"

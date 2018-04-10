@@ -1,30 +1,27 @@
-import {BehaviorSubject} from 'rxjs/BehaviorSubject'
-import {Observable} from 'rxjs/Observable'
-import {Count} from '../../domain/entities/Count'
-import {Subject} from 'rxjs/Subject';
-import {injectable} from 'inversify';
-import {CountVolatileRepository} from '../../domain/repository/CountVolatileRepository';
+import { BehaviorSubject, Observable, Subject } from 'rxjs'
+import { Count } from '../../domain/entities/Count'
+import { CountVolatileRepository } from '../../domain/repository/CountVolatileRepository'
+import { Injectable } from '@angular/core'
 
 interface IncrementAction {
-  type: 'INCREMENT';
+  type: 'INCREMENT'
   num: number
 }
 
 interface DecrementAction {
-  type: 'DECREMENT';
+  type: 'DECREMENT'
   num: number
 }
 
 interface UpdateAction {
-  type: 'UPDATE';
+  type: 'UPDATE'
   count: Count
 }
 
-export type Actions = IncrementAction | DecrementAction | UpdateAction;
+export type Actions = IncrementAction | DecrementAction | UpdateAction
 
-@injectable()
+@Injectable()
 export class CountVolatileRepositoryImpl implements CountVolatileRepository {
-
   private countBSubject: BehaviorSubject<Count>
 
   // 更新を明示的にシーケンシャルにするために使う。（JSだとそもそもSingleThreadだが）
@@ -37,29 +34,29 @@ export class CountVolatileRepositoryImpl implements CountVolatileRepository {
   }
 
   private _update(e: Actions): void {
-    switch (e.type){
+    switch (e.type) {
       case 'INCREMENT':
         this.countBSubject.next(this.countBSubject.value.increment(e.num))
-        break;
+        break
       case 'DECREMENT':
         this.countBSubject.next(this.countBSubject.value.decrement(e.num))
-        break;
+        break
       case 'UPDATE':
         this.countBSubject.next(e.count)
-        break;
+        break
       default:
-        const _e: never = e;
+        const _e: never = e
         console.warn(_e)
         break
     }
   }
 
   getState(): Count {
-    return this.countBSubject.getValue();
+    return this.countBSubject.getValue()
   }
 
   getStateObservable(): Observable<Count> {
-    return this.countBSubject;
+    return this.countBSubject
   }
 
   increment(num: number): void {

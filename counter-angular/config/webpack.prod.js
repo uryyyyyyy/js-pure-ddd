@@ -5,8 +5,8 @@ const {AngularCompilerPlugin} = require('@ngtools/webpack')
 module.exports = {
   mode: 'production',
   entry: {
-    polyfills: './src/polyfills.ts',
-    app: './src/main.ts'
+    polyfills: './src/application/polyfills.ts',
+    app: './src/application/main.ts'
   },
   output: {
     path: path.resolve('dist'),

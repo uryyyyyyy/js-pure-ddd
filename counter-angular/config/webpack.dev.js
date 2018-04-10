@@ -4,8 +4,8 @@ const path = require("path");
 module.exports = {
   mode: 'development',
   entry: {
-    polyfills: './src/polyfills.ts',
-    app: './src/main.ts'
+    polyfills: './src/application/polyfills.ts',
+    app: './src/application/main.ts'
   },
   output: {
     path: path.resolve('dist'),
