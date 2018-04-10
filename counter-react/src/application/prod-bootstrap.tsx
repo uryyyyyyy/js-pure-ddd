@@ -2,7 +2,7 @@ import * as React from 'react'
 import * as ReactDOM from 'react-dom'
 import "reflect-metadata";
 import {TYPES} from './context/di-types';
-import {CountVolatileRepositoryImpl} from './infra/CountSessionRepository';
+import {CountVolatileRepositoryImpl} from './infra/CountVolatileRepositoryImpl';
 import {container} from './context/context';
 import {CountVolatileRepository} from '../domain/repository/CountVolatileRepository';
 import {CountPersistRepository} from '../domain/repository/CountPersistRepository';
