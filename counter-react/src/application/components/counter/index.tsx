@@ -1,12 +1,14 @@
 import * as React from 'react'
-import {LocalCounter} from "./localCounter/View";
+import {LocalCounter} from "./LocalCounter/View";
+import {GlobalCounter} from "./GlobalCounter/View";
 
 export const CounterContainer: React.StatelessComponent<{}> = () => {
   return (
     <>
       <LocalCounter/>
-      <br />
-      <br />
       <LocalCounter/>
+      <br />
+      <GlobalCounter/>
+      <GlobalCounter/>
     </>)
 }

@@ -9,15 +9,12 @@ import {Subject} from 'rxjs/Subject';
 
 export interface State {
   count: number
-  internalCount: number
   loadingCount: number
 }
 
 export interface ViewModel {
   increment(amount: number): void
   decrement(amount: number):void
-  internalIncrement(amount: number): void
-  internalDecrement(amount: number):void
   getStateStream(): Observable<State>
   getState(): State,
   reload(): void
@@ -37,21 +34,9 @@ interface CountUpdateAction {
   count: Count
 }
 
-interface InternalCountIncrementAction {
-  type: 'I_COUNT_INCREMENT';
-  num: number
-}
-
-interface InternalCountDecrementAction {
-  type: 'I_COUNT_DECREMENT';
-  num: number
-}
-
 export type Actions = LCIncrementAction |
   LCDecrementAction |
-  CountUpdateAction |
-  InternalCountIncrementAction |
-  InternalCountDecrementAction
+  CountUpdateAction
 
 export class CounterViewModelImpl implements ViewModel {
 
@@ -66,7 +51,6 @@ export class CounterViewModelImpl implements ViewModel {
   ) {
     this.state = new BehaviorSubject<State>({
       loadingCount: 0,
-      internalCount: 0,
       count: countSRepo.getState().getValue(),
     })
     countSRepo.getStateObservable()
@@ -88,12 +72,6 @@ export class CounterViewModelImpl implements ViewModel {
       case 'G_COUNT_UPDATE':
         this.state.next({...current, count: e.count.getValue()})
         break;
-      case 'I_COUNT_INCREMENT':
-        this.state.next({...current, internalCount: current.internalCount + e.num})
-        break;
-      case 'I_COUNT_DECREMENT':
-        this.state.next({...current, internalCount: current.internalCount - e.num})
-        break;
       default:
         const _e: never = e;
         console.warn(_e)
@@ -107,14 +85,6 @@ export class CounterViewModelImpl implements ViewModel {
 
   decrement(amount: number):void {
     this.countSRepo.decrement(amount)
-  }
-
-  internalIncrement(num: number): void {
-    this.updateStream.next({type: 'I_COUNT_INCREMENT', num})
-  }
-
-  internalDecrement(num: number):void {
-    this.updateStream.next({type: 'I_COUNT_DECREMENT', num})
   }
 
   getStateStream(): Observable<State> {

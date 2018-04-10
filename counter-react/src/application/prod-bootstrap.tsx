@@ -8,7 +8,7 @@ import {CountVolatileRepository} from '../domain/repository/CountVolatileReposit
 import {CountPersistRepository} from '../domain/repository/CountPersistRepository';
 //import {CountPersistRepositoryLS} from './infra/CountPersistRepositoryLS';
 import {CountPersistRepositoryServer} from './infra/CountPersistRepositoryServer';
-import {CounterContainer} from "./components/counter/View";
+import {CounterContainer} from "./components/counter/";
 
 container.bind<CountVolatileRepository>(TYPES.CountVolatileRepository).to(CountVolatileRepositoryImpl).inSingletonScope();
 //container.bind<CountPersistRepository>(TYPES.CountPersistRepository).to(CountPersistRepositoryLS).inSingletonScope();
