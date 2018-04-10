@@ -7,11 +7,11 @@ import { CounterService } from './service/CounterService'
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  title: string
+  name: string
   count: number
 
   public constructor(private counterService: CounterService) {
-    this.title = 'Angular'
+    this.name = 'Angular'
     this.count = 0
   }
 

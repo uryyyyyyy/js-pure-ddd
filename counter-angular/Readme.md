@@ -1,12 +1,11 @@
 
-## Angular without Angular-cli
-
-minimal sample implementation
+## Angular counter
 
 ## requirement
 
 - NodeJS 8.9~
 - NPM 5.3~
+- Angular 6.0-RC
 
 ## setup
 

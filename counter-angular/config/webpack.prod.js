@@ -1,23 +1,29 @@
 const webpack = require('webpack');
 const path = require("path");
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const {AngularCompilerPlugin} = require('@ngtools/webpack')
 
 module.exports = {
+  mode: 'production',
   entry: {
-    'polyfills': './src/polyfills.ts',
-    'app': './src/main.ts'
+    polyfills: './src/polyfills.ts',
+    app: './src/main.ts'
   },
   output: {
     path: path.resolve('dist'),
-    filename: '[name].js',
-    chunkFilename: '[id].chunk.js'
+    filename: '[name].js'
   },
 
   resolve: {
     extensions: [
       '.js', '.ts'
     ]
+  },
+
+  optimization: {
+    splitChunks: {
+      name: 'common',
+      chunks: 'initial'
+    }
   },
 
   module: {
@@ -40,21 +46,17 @@ module.exports = {
   },
 
   plugins: [
-    new webpack.optimize.CommonsChunkPlugin({
-      name: ['app', 'polyfills']
-    }),
     new webpack.ContextReplacementPlugin(
-      /\@angular(\\|\/)core(\\|\/)esm5/,
+      /\@angular(\\|\/)core(\\|\/)fesm5/,
       path.resolve('src'),
       {}
     ),
     new webpack.DefinePlugin({
       ENV_PRODUCTION: true,
     }),
-    new UglifyJsPlugin(),
     new AngularCompilerPlugin({
       tsConfigPath: './tsconfig.json',
       mainPath: path.resolve('src/main.ts')
-    }),
+    })
   ]
 };

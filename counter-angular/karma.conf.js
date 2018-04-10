@@ -24,23 +24,16 @@ module.exports = (config) => {
       module: {
         rules: [
           {
-            test: /(?:\.ngfactory\.js|\.ngstyle\.js|\.ts)$/,
-            use: {
-              loader: '@ngtools/webpack',
-              options: {
-                mainPath: "src/main.ts",
-                tsConfigPath: 'tsconfig.json',
-                sourceMap: true
-              }
-            }
-          },
-          {
             test: /\.html$/,
             use: 'html-loader'
           },
           {
             test: /\.scss$/,
             use: ['to-string-loader', 'css-loader', 'sass-loader']
+          },
+          {
+            test: /\.ts$/,
+            loader: ['ts-loader', 'angular2-template-loader']
           }
         ]
       }

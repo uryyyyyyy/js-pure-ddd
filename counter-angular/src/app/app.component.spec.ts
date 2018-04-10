@@ -3,8 +3,7 @@ import { async, TestBed } from '@angular/core/testing'
 import { AppComponent } from './app.component'
 import { Count, CounterService } from './service/CounterService'
 import { HttpClientModule } from '@angular/common/http'
-import { Observable } from 'rxjs/Observable'
-import 'rxjs/add/observable/of'
+import { of } from 'rxjs'
 
 describe('AppComponent', () => {
   beforeEach(
@@ -31,18 +30,18 @@ describe('AppComponent', () => {
     })
   )
   it(
-    `should have title`,
+    `should have name`,
     async(() => {
       const fixture = TestBed.createComponent(AppComponent)
-      const app = fixture.debugElement.componentInstance
-      expect(app.title).toEqual('Angular')
+      const app: AppComponent = fixture.debugElement.componentInstance
+      expect(app.name).toEqual('Angular')
     })
   )
   it(
     'should render title in a h1 tag',
     async(() => {
       const spy = TestBed.get(CounterService)
-      spy.getCount.and.returnValue(Observable.of<Count>({ count: 100 }))
+      spy.getCount.and.returnValue(of<Count>({ count: 100 }))
 
       const fixture = TestBed.createComponent(AppComponent)
       fixture.detectChanges()
@@ -54,7 +53,7 @@ describe('AppComponent', () => {
     'should render count with async module',
     async(() => {
       const spy = TestBed.get(CounterService)
-      spy.getCount.and.returnValue(Observable.of<Count>({ count: 100 }))
+      spy.getCount.and.returnValue(of<Count>({ count: 100 }))
       const fixture = TestBed.createComponent(AppComponent)
       fixture.detectChanges()
       const compiled = fixture.debugElement.nativeElement
