@@ -56,7 +56,7 @@ module.exports = {
     }),
     new AngularCompilerPlugin({
       tsConfigPath: './tsconfig.json',
-      mainPath: path.resolve('src/main.ts')
+      mainPath: path.resolve('src/application/main.ts')
     })
   ]
 };

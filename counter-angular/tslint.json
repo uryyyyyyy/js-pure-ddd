@@ -13,6 +13,7 @@
     "member-access": false,
     "no-implicit-dependencies": false,
     "no-submodule-imports": false,
-    "quotemark": [true, "single"]
+    "quotemark": [true, "single"],
+    "arrow-parens": false
   }
 }

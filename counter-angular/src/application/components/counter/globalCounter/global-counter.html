@@ -1,8 +1,11 @@
 <div>
     <h2>Global Counter</h2>
-    <p>global count: {{this.internalCount}}</p>
-    <button>Global Increment 3</button>
-    <button>Global Decrement 2</button>
-    <button>Global save</button>
-    <button>Global reload</button>
+    <p>global count: {{count}}</p>
+    <button (click)="increment(3)">Global Increment 3</button>
+    <button (click)="decrement(2)">Global Decrement 2</button>
+    <button (click)="save()">Global save</button>
+    <button (click)="reload()">Global reload</button>
+    <p *ngIf="loadingCount !== 0">
+        loading
+    </p>
 </div>

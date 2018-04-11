@@ -1,8 +1,7 @@
-import { BehaviorSubject, Subject } from 'rxjs'
+import { BehaviorSubject, Subject, Observable } from 'rxjs'
 import { Count } from '../../domain/entities/Count'
 import { CountVolatileRepository } from '../../domain/repository/CountVolatileRepository'
 import { Injectable } from '@angular/core'
-import { Observable } from 'rxjs/index'
 
 interface IncrementAction {
   type: 'INCREMENT'
