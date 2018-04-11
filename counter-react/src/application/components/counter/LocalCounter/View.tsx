@@ -10,7 +10,10 @@ export class View extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = props.viewModel.getState()
-    props.viewModel.getStateStream().skip(1)
+  }
+
+  componentDidMount(){
+    this.props.viewModel.getStateStream()
       .subscribe(viewModelState => this.setState(viewModelState))
   }
 

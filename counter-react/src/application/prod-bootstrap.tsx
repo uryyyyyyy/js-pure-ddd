@@ -14,10 +14,4 @@ container.bind<CountVolatileRepository>(TYPES.CountVolatileRepository).to(CountV
 //container.bind<CountPersistRepository>(TYPES.CountPersistRepository).to(CountPersistRepositoryLS).inSingletonScope();
 container.bind<CountPersistRepository>(TYPES.CountPersistRepository).to(CountPersistRepositoryServer).inSingletonScope();
 
-ReactDOM.render(<>
-    <CounterContainer />
-    <p> </p>
-    <p> </p>
-    <p> </p>
-    <CounterContainer />
-  </>, document.getElementById('app'));
+ReactDOM.render(<CounterContainer />, document.getElementById('app'));

@@ -11,11 +11,11 @@ export class View extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = props.viewModel.getState()
-    props.viewModel.getStateStream().skip(1)
-      .subscribe(viewModelState => this.setState(viewModelState))
   }
 
-  componentWillMount(){
+  componentDidMount(){
+    this.props.viewModel.getStateStream()
+      .subscribe(viewModelState => this.setState(viewModelState))
     this.props.viewModel.reload()
   }
 
