@@ -1,6 +1,6 @@
 import {Observable} from 'rxjs/Observable';
 
-export interface SessionRepository<State> {
+export interface VolatileRepository<State> {
 
   /**
    * get current state
