@@ -2,6 +2,7 @@ import { BehaviorSubject, Subject } from 'rxjs'
 import { Count } from '../../domain/entities/Count'
 import { CountVolatileRepository } from '../../domain/repository/CountVolatileRepository'
 import { Injectable } from '@angular/core'
+import { Observable } from 'rxjs/index'
 
 interface IncrementAction {
   type: 'INCREMENT'
@@ -21,14 +22,13 @@ interface UpdateAction {
 export type Actions = IncrementAction | DecrementAction | UpdateAction
 
 @Injectable()
-export class CountVolatileRepositoryImpl extends CountVolatileRepository {
+export class CountVolatileRepositoryImpl implements CountVolatileRepository {
   private readonly countBSubject: BehaviorSubject<Count>
 
   // 更新を明示的にシーケンシャルにするために使う。（JSだとそもそもSingleThreadだが）
   private updateStream: Subject<Actions>
 
   constructor() {
-    super()
     this.countBSubject = new BehaviorSubject(new Count(0))
     this.updateStream = new Subject()
     this.updateStream.forEach((e: Actions) => this._update(e))
@@ -52,15 +52,15 @@ export class CountVolatileRepositoryImpl extends CountVolatileRepository {
     }
   }
 
-  getState = () => {
+  getState(): Count {
     return this.countBSubject.getValue()
   }
 
-  getStateObservable = () => {
+  getStateObservable(): Observable<Count> {
     return this.countBSubject
   }
 
-  increment = (num: number) => {
+  increment(num: number): void {
     const event: IncrementAction = {
       type: 'INCREMENT',
       num
@@ -68,7 +68,7 @@ export class CountVolatileRepositoryImpl extends CountVolatileRepository {
     this.updateStream.next(event)
   }
 
-  decrement = (num: number) => {
+  decrement(num: number): void {
     const event: DecrementAction = {
       type: 'DECREMENT',
       num
@@ -76,7 +76,7 @@ export class CountVolatileRepositoryImpl extends CountVolatileRepository {
     this.updateStream.next(event)
   }
 
-  update = (count: Count) => {
+  update(count: Count): void {
     const event: UpdateAction = {
       type: 'UPDATE',
       count
@@ -84,3 +84,5 @@ export class CountVolatileRepositoryImpl extends CountVolatileRepository {
     this.updateStream.next(event)
   }
 }
+
+export const countVolatileRepositoryImpl = new CountVolatileRepositoryImpl()

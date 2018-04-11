@@ -1,4 +1,4 @@
-import { CountPersistRepository } from '../../domain/repository/CountPersistRepository'
+import { CountPersistRepository, Fail } from '../../domain/repository/CountPersistRepository'
 import { Count } from '../../domain/entities/Count'
 import { Injectable } from '@angular/core'
 
@@ -9,8 +9,8 @@ const myHeaders = new Headers({
 })
 
 @Injectable()
-export class CountPersistRepositoryServer extends CountPersistRepository {
-  saveCount = (count: Count) => {
+export class CountPersistRepositoryServer implements CountPersistRepository {
+  saveCount(count: Count): Promise<void | Fail> {
     return fetch('/api/count', {
       method: 'PUT',
       body: JSON.stringify({ amount: count.getValue() }),
@@ -26,7 +26,7 @@ export class CountPersistRepositoryServer extends CountPersistRepository {
     })
   }
 
-  fetchCount = () => {
+  fetchCount(): Promise<Count> {
     return fetch('/api/count', {
       method: 'GET',
       headers: myHeaders
@@ -43,3 +43,5 @@ export class CountPersistRepositoryServer extends CountPersistRepository {
       })
   }
 }
+
+export const countPersistRepositoryServer = new CountPersistRepositoryServer()

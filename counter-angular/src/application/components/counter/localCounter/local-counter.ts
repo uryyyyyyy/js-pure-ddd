@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core'
+import { Component, Inject, OnInit } from '@angular/core'
 import { CountVolatileRepository } from '../../../../domain/repository/CountVolatileRepository'
+import { COUNT_V_REPO } from '../../../context/inject'
 
 @Component({
   selector: 'local-counter',
@@ -9,11 +10,11 @@ import { CountVolatileRepository } from '../../../../domain/repository/CountVola
 export class LocalCounter implements OnInit {
   internalCount: number
 
-  public constructor(private countVolatileRepository: CountVolatileRepository) {
+  public constructor(@Inject(COUNT_V_REPO) private countVRepo: CountVolatileRepository) {
     this.internalCount = 0
   }
 
   ngOnInit(): void {
-    console.log(this.countVolatileRepository)
+    console.log(this.countVRepo)
   }
 }

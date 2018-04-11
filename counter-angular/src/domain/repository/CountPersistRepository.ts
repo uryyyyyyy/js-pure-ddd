@@ -4,9 +4,9 @@ export interface Fail {
   err: Error
 }
 
-export abstract class CountPersistRepository {
-  saveCount: (count: Count) => Promise<void | Fail>
-  fetchCount: () => Promise<Count>
+export interface CountPersistRepository {
+  saveCount(count: Count): Promise<void | Fail>
+  fetchCount(): Promise<Count>
 }
 
 export function isFail<T>(result: T | Fail): result is Fail {
