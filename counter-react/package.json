@@ -1,12 +1,12 @@
 {
-  "name": "react-typescript-redux",
+  "name": "counter-react",
   "version": "1.0.0",
   "license": "MIT",
   "scripts": {
     "build": "webpack --config webpack.config.dev.js",
     "build:watch": "webpack --config webpack.config.dev.js --watch",
     "build:prod": "webpack --config webpack.config.prod.js",
-    "server": "node dev-server.es6"
+    "server": "node dev-server.js"
   },
   "devDependencies": {
     "@types/promise.prototype.finally": "2.0.2",
