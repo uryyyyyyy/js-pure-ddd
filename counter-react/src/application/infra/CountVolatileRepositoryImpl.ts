@@ -1,7 +1,5 @@
-import {BehaviorSubject} from 'rxjs/BehaviorSubject'
-import {Observable} from 'rxjs/Observable'
+import {BehaviorSubject, Observable, Subject} from 'rxjs'
 import {Count} from '../../domain/entities/Count'
-import {Subject} from 'rxjs/Subject';
 import {injectable} from 'inversify';
 import {CountVolatileRepository} from '../../domain/repository/CountVolatileRepository';
 

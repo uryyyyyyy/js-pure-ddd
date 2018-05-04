@@ -1,11 +1,9 @@
 import 'promise.prototype.finally'
-import 'rxjs/add/operator/skip'
 import {Count} from '../../../../domain/entities/Count';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {BehaviorSubject, Observable, Subject} from 'rxjs';
+import { skip } from 'rxjs/operators';
 import {CountVolatileRepository} from '../../../../domain/repository/CountVolatileRepository';
-import {Observable} from 'rxjs/Observable';
 import {CountPersistRepository, isFail} from '../../../../domain/repository/CountPersistRepository';
-import {Subject} from 'rxjs/Subject';
 
 export interface State {
   count: number
@@ -54,7 +52,7 @@ export class CounterViewModelImpl implements ViewModel {
       count: countSRepo.getState().getValue(),
     })
     countSRepo.getStateObservable()
-      .skip(1)
+      .pipe(skip(1))
       .subscribe(count => this.updateStream.next({type: 'G_COUNT_UPDATE', count}))
     this.updateStream = new Subject()
     this.updateStream.forEach((e: Actions) => this._update(e))

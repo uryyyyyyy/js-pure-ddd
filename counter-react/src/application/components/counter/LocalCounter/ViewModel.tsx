@@ -1,8 +1,4 @@
-import 'promise.prototype.finally'
-import 'rxjs/add/operator/skip'
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {Observable} from 'rxjs/Observable';
-import {Subject} from 'rxjs/Subject';
+import {BehaviorSubject, Observable, Subject} from 'rxjs';
 
 export interface State {
   internalCount: number
