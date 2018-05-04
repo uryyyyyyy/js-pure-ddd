@@ -3,9 +3,9 @@
 
 ## requirement
 
-- NodeJS 8.9~
-- NPM 5.3~
-- Angular 6.0-RC
+- NodeJS 8.11~
+- NPM 5.6~
+- Angular 6.0~
 
 ## setup
 

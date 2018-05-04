@@ -1,6 +1,7 @@
 const webpack = require('webpack');
 const path = require("path");
 const {AngularCompilerPlugin} = require('@ngtools/webpack')
+const PurifyPlugin = require('@angular-devkit/build-optimizer').PurifyPlugin
 
 module.exports = {
   mode: 'production',
@@ -28,6 +29,13 @@ module.exports = {
 
   module: {
     rules: [
+      {
+        test: /\.js$/,
+        loader: '@angular-devkit/build-optimizer/webpack-loader',
+        options: {
+          sourceMap: false
+        }
+      },
       {
         test: /(?:\.ngfactory\.js|\.ngstyle\.js|\.ts)$/,
         use: {
@@ -57,6 +65,7 @@ module.exports = {
     new AngularCompilerPlugin({
       tsConfigPath: './tsconfig.json',
       mainPath: path.resolve('src/application/main.ts')
-    })
+    }),
+    new PurifyPlugin()
   ]
 };
