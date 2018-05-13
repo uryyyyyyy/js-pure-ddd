@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {CounterViewModelImpl, State, ViewModel} from './ViewModel';
+import {LocalCounterViewModel, State, ViewModel} from './ViewModel';
 
 interface Props {
   viewModel: ViewModel
@@ -31,7 +31,7 @@ export class View extends React.Component<Props, State> {
 
 export const LocalCounter: React.StatelessComponent<{}> = () => {
 
-  const viewModel = new CounterViewModelImpl()
+  const viewModel = new LocalCounterViewModel()
 
   return (<View
     viewModel={viewModel}

@@ -1,7 +1,7 @@
 import 'promise.prototype.finally'
 import {Count} from '../../../../domain/entities/Count';
-import {BehaviorSubject, Observable, Subject} from 'rxjs';
-import { skip } from 'rxjs/operators';
+import {BehaviorSubject, Observable} from 'rxjs';
+import {skip} from 'rxjs/operators';
 import {CountVolatileRepository} from '../../../../domain/repository/CountVolatileRepository';
 import {CountPersistRepository, isFail} from '../../../../domain/repository/CountPersistRepository';
 
@@ -19,29 +19,9 @@ export interface ViewModel {
   save(): void
 }
 
-interface LCIncrementAction {
-  type: 'LC_INCREMENT'
-}
-
-interface LCDecrementAction {
-  type: 'LC_DECREMENT';
-}
-
-interface CountUpdateAction {
-  type: 'G_COUNT_UPDATE';
-  count: Count
-}
-
-export type Actions = LCIncrementAction |
-  LCDecrementAction |
-  CountUpdateAction
-
 export class CounterViewModel implements ViewModel {
 
   private state: BehaviorSubject<State>
-
-  // 更新を明示的にシーケンシャルにするために使う。（JSだとそもそもSingleThreadだが）
-  private updateStream: Subject<Actions>
 
   constructor(
     private countSRepo: CountVolatileRepository,
@@ -53,28 +33,9 @@ export class CounterViewModel implements ViewModel {
     })
     countSRepo.getStateObservable()
       .pipe(skip(1))
-      .subscribe(count => this.updateStream.next({type: 'G_COUNT_UPDATE', count}))
-    this.updateStream = new Subject()
-    this.updateStream.forEach((e: Actions) => this._update(e))
-  }
-
-  private _update(e: Actions): void {
-    const current = this.state.getValue()
-    switch (e.type){
-      case 'LC_INCREMENT':
-        this.state.next({...current, loadingCount: current.loadingCount + 1})
-        break;
-      case 'LC_DECREMENT':
-        this.state.next({...current, loadingCount: current.loadingCount - 1})
-        break;
-      case 'G_COUNT_UPDATE':
-        this.state.next({...current, count: e.count.getValue()})
-        break;
-      default:
-        const _e: never = e;
-        console.warn(_e)
-        break
-    }
+      .subscribe(count => {
+        this.state.next({...this.state.getValue(), count: count.getValue()})
+      })
   }
 
   increment(amount: number):void {
@@ -94,16 +55,20 @@ export class CounterViewModel implements ViewModel {
   }
 
   reload(): void {
-    this.updateStream.next({type: 'LC_INCREMENT'})
+    const current = this.state.getValue()
+    this.state.next({...current, loadingCount: current.loadingCount + 1})
     this.countPRepo.fetchCount()
       .then(count => this.countSRepo.update(count))
       .catch(e => console.error(e))
-      .finally(() => this.updateStream.next({type: 'LC_DECREMENT'}))
+      .finally(() => {
+        const current = this.state.getValue()
+        this.state.next({...current, loadingCount: current.loadingCount - 1})
+      })
   }
 
   save(): void {
-    this.updateStream.next({type: 'LC_INCREMENT'})
     const current = this.state.getValue()
+    this.state.next({...current, loadingCount: current.loadingCount + 1})
     this.countPRepo.saveCount(new Count(current.count))
       .then((result) => {
         if(isFail(result)) {
@@ -116,6 +81,9 @@ export class CounterViewModel implements ViewModel {
         console.error(e)
         window.alert('サーバーに繋がりませんでした')
       })
-      .finally(() => this.updateStream.next({type: 'LC_DECREMENT'}))
+      .finally(() => {
+        const current = this.state.getValue()
+        this.state.next({...current, loadingCount: current.loadingCount - 1})
+      })
   }
 }

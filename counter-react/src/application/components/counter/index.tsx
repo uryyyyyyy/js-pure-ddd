@@ -10,5 +10,6 @@ export const CounterContainer: React.StatelessComponent<{}> = () => {
       <br />
       <GlobalCounter/>
       <GlobalCounter/>
-    </>)
+    </>
+  )
 }
