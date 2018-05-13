@@ -17,7 +17,7 @@ export class CountVolatileRepositoryImpl implements CountVolatileRepository {
   ) {
     this.globalStore = store
     this.countBSubject = new BehaviorSubject(new Count(0))
-    store.subscribe(() => this.countBSubject.next(store.getState()))
+    store.subscribe(() => this.countBSubject.next(store.getState().count))
   }
 
   getState(): Count {
