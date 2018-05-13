@@ -36,7 +36,7 @@ export type Actions = LCIncrementAction |
   LCDecrementAction |
   CountUpdateAction
 
-export class CounterViewModelImpl implements ViewModel {
+export class CounterViewModel implements ViewModel {
 
   private state: BehaviorSubject<State>
 

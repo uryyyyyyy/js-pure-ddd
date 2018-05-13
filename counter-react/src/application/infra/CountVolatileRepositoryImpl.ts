@@ -1,55 +1,23 @@
-import {BehaviorSubject, Observable, Subject} from 'rxjs'
+import {BehaviorSubject, Observable} from 'rxjs'
 import {Count} from '../../domain/entities/Count'
-import {injectable} from 'inversify';
+import {inject, injectable} from 'inversify';
 import {CountVolatileRepository} from '../../domain/repository/CountVolatileRepository';
-
-interface IncrementAction {
-  type: 'INCREMENT';
-  num: number
-}
-
-interface DecrementAction {
-  type: 'DECREMENT';
-  num: number
-}
-
-interface UpdateAction {
-  type: 'UPDATE';
-  count: Count
-}
-
-export type Actions = IncrementAction | DecrementAction | UpdateAction;
+import {DecrementAction, IncrementAction, UpdateAction} from "./store/CountReducer";
+import {Store} from "redux";
+import {TYPES} from "../context/di-types";
 
 @injectable()
 export class CountVolatileRepositoryImpl implements CountVolatileRepository {
 
-  private countBSubject: BehaviorSubject<Count>
+  private readonly countBSubject: BehaviorSubject<Count>
+  private readonly globalStore: Store
 
-  // 更新を明示的にシーケンシャルにするために使う。（JSだとそもそもSingleThreadだが）
-  private updateStream: Subject<Actions>
-
-  constructor() {
+  constructor(
+    @inject(TYPES.GlobalStore) store: Store
+  ) {
+    this.globalStore = store
     this.countBSubject = new BehaviorSubject(new Count(0))
-    this.updateStream = new Subject()
-    this.updateStream.forEach((e: Actions) => this._update(e))
-  }
-
-  private _update(e: Actions): void {
-    switch (e.type){
-      case 'INCREMENT':
-        this.countBSubject.next(this.countBSubject.value.increment(e.num))
-        break;
-      case 'DECREMENT':
-        this.countBSubject.next(this.countBSubject.value.decrement(e.num))
-        break;
-      case 'UPDATE':
-        this.countBSubject.next(e.count)
-        break;
-      default:
-        const _e: never = e;
-        console.warn(_e)
-        break
-    }
+    store.subscribe(() => this.countBSubject.next(store.getState()))
   }
 
   getState(): Count {
@@ -62,25 +30,28 @@ export class CountVolatileRepositoryImpl implements CountVolatileRepository {
 
   increment(num: number): void {
     const event: IncrementAction = {
+      customAction: true,
       type: 'INCREMENT',
       num
     }
-    this.updateStream.next(event)
+    this.globalStore.dispatch(event)
   }
 
   decrement(num: number): void {
     const event: DecrementAction = {
+      customAction: true,
       type: 'DECREMENT',
       num
     }
-    this.updateStream.next(event)
+    this.globalStore.dispatch(event)
   }
 
   update(count: Count): void {
     const event: UpdateAction = {
+      customAction: true,
       type: 'UPDATE',
       count
     }
-    this.updateStream.next(event)
+    this.globalStore.dispatch(event)
   }
 }

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {ViewModel, CounterViewModelImpl, State} from './ViewModel';
+import {ViewModel, CounterViewModel, State} from './ViewModel';
 import {getCountPersistRepository, getCountSessionRepository} from '../../../context/context';
 
 interface Props {
@@ -36,7 +36,7 @@ export class View extends React.Component<Props, State> {
 
 export const GlobalCounter: React.StatelessComponent<{}> = () => {
 
-  const viewModel = new CounterViewModelImpl(
+  const viewModel = new CounterViewModel(
     getCountSessionRepository(),
     getCountPersistRepository()
   )
