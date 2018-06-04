@@ -6,7 +6,6 @@ import {CountVolatileRepositoryImpl} from './infra/CountVolatileRepositoryImpl';
 import {container} from './context/context';
 import {CountVolatileRepository} from '../domain/repository/CountVolatileRepository';
 import {CountPersistRepository} from '../domain/repository/CountPersistRepository';
-//import {CountPersistRepositoryLS} from './infra/CountPersistRepositoryLS';
 import {CountPersistRepositoryServer} from './infra/CountPersistRepositoryServer';
 import {CounterContainer} from "./components/counter/";
 import {store} from "./infra/store/Store";

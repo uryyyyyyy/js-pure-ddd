@@ -1,6 +1,6 @@
 import * as React from 'react'
-import {LocalCounter} from "./LocalCounter/View";
-import {GlobalCounter} from "./GlobalCounter/View";
+import {GlobalCounter} from "./GlobalCounter";
+import {LocalCounter} from "./LocalCounter";
 
 export const CounterContainer: React.StatelessComponent<{}> = () => {
   return (
