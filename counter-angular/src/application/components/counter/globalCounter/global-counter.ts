@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core'
-import { COUNT_P_REPO } from '../../../context/inject'
+import { COUNT_REPO } from '../../../context/inject'
 import {
   CountRepository,
   isFail
@@ -18,7 +18,7 @@ export class GlobalCounter implements OnInit {
   service: CounterService
 
   public constructor(
-    @Inject(COUNT_P_REPO) countPRepo: CountRepository
+    @Inject(COUNT_REPO) countPRepo: CountRepository
   ) {
     this.service = new CounterService(countPRepo)
     this.count = new Count(0)

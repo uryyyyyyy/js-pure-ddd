@@ -4,31 +4,31 @@ import {Count} from '../entities/Count';
 export class CounterService {
 
   public constructor(
-    private countPRepo: CountRepository
+    private countRepo: CountRepository
   ) {}
 
   fetchLatest(): Promise<void> {
-    return this.countPRepo
+    return this.countRepo
       .fetchCount()
-      .then((count) => this.countPRepo.update(count))
+      .then((count) => this.countRepo.update(count))
   }
 
   save(count: Count): Promise<void | Fail> {
-    return this.countPRepo
+    return this.countRepo
       .saveCount(count)
   }
 
   increment(num: number): void {
-    const count = this.countPRepo.getState()
-    this.countPRepo.update(count.increment(num))
+    const count = this.countRepo.getState()
+    this.countRepo.update(count.increment(num))
   }
 
   decrement(num: number): void {
-    const count = this.countPRepo.getState()
-    this.countPRepo.update(count.decrement(num))
+    const count = this.countRepo.getState()
+    this.countRepo.update(count.decrement(num))
   }
 
   subscribe(next: (value: Count) => void): void {
-    this.countPRepo.getStateObservable().subscribe(next)
+    this.countRepo.getStateObservable().subscribe(next)
   }
 }
