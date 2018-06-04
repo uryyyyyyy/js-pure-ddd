@@ -2,19 +2,12 @@ import * as React from 'react'
 import * as ReactDOM from 'react-dom'
 import "reflect-metadata";
 import {TYPES} from './context/di-types';
-import {CountVolatileRepositoryImpl} from './infra/CountVolatileRepositoryImpl';
 import {container} from './context/context';
-import {CountVolatileRepository} from '../domain/repository/CountVolatileRepository';
-import {CountPersistRepository} from '../domain/repository/CountPersistRepository';
-import {CountPersistRepositoryServer} from './infra/CountPersistRepositoryServer';
 import {CounterContainer} from "./components/counter/";
-import {store} from "./infra/store/Store";
-import {Store} from "redux";
+import {CountRepository} from "../domain/repository/CountRepository";
+import {CountRepositoryServer} from "./infra/CountRepositoryServer.service";
 
-container.bind<Store>(TYPES.GlobalStore).toConstantValue(store);
-container.bind<CountVolatileRepository>(TYPES.CountVolatileRepository).to(CountVolatileRepositoryImpl).inSingletonScope();
-//container.bind<CountPersistRepository>(TYPES.CountPersistRepository).to(CountPersistRepositoryLS).inSingletonScope();
-container.bind<CountPersistRepository>(TYPES.CountPersistRepository).to(CountPersistRepositoryServer).inSingletonScope();
+container.bind<CountRepository>(TYPES.CountRepository).to(CountRepositoryServer).inSingletonScope();
 
 ReactDOM.render(<CounterContainer />,
   document.getElementById('app'));

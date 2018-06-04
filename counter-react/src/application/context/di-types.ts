@@ -1,5 +1,3 @@
 export const TYPES = {
-  CountVolatileRepository: Symbol.for("CountVolatileRepository"),
-  CountPersistRepository: Symbol.for("CountPersistRepository"),
-  GlobalStore: Symbol.for("GlobalStore"),
+  CountRepository: Symbol.for("CountRepository"),
 };

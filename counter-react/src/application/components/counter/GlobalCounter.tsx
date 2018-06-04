@@ -1,10 +1,10 @@
 import 'promise.prototype.finally'
 import {Count} from '../../../domain/entities/Count';
-import {CountPersistRepository, isFail} from '../../../domain/repository/CountPersistRepository';
+import {CountRepository, isFail} from '../../../domain/repository/CountRepository';
 import {TYPES} from "../../context/di-types";
-import {CountVolatileRepository} from "../../../domain/repository/CountVolatileRepository";
 import * as React from "react";
 import {lazyInject} from "../../context/context";
+import {CounterService} from "../../../domain/service/CounterService";
 
 export interface State {
   count: number
@@ -13,8 +13,8 @@ export interface State {
 
 export class GlobalCounter extends React.Component<{}, State> {
 
-  @lazyInject(TYPES.CountPersistRepository) private countPRepo?: CountPersistRepository;
-  @lazyInject(TYPES.CountVolatileRepository) private countSRepo?: CountVolatileRepository;
+  @lazyInject(TYPES.CountRepository) private countRepo?: CountRepository;
+  private service?: CounterService
 
   constructor(props: {}) {
     super(props)
@@ -25,17 +25,16 @@ export class GlobalCounter extends React.Component<{}, State> {
   }
 
   increment(amount: number):void {
-    this.countSRepo!.increment(amount)
+    this.service!.increment(amount)
   }
 
   decrement(amount: number):void {
-    this.countSRepo!.decrement(amount)
+    this.service!.decrement(amount)
   }
 
   reload(): void {
     this.setState({loadingCount: this.state.loadingCount + 1})
-    this.countPRepo!.fetchCount()
-      .then(count => this.countSRepo!.update(count))
+    this.service!.fetchLatest()
       .catch(e => console.error(e))
       .finally(() => {
         this.setState({loadingCount: this.state.loadingCount - 1})
@@ -44,7 +43,7 @@ export class GlobalCounter extends React.Component<{}, State> {
 
   save(): void {
     this.setState({loadingCount: this.state.loadingCount + 1})
-    this.countPRepo!.saveCount(new Count(this.state.count))
+    this.service!.save(new Count(this.state.count))
       .then((result) => {
         if(isFail(result)) {
           window.alert(result.err.message)
@@ -62,10 +61,10 @@ export class GlobalCounter extends React.Component<{}, State> {
   }
 
   componentDidMount(){
-    this.countSRepo!.getStateObservable()
-      .subscribe((count: Count) => {
-        this.setState({...this.state, count: count.getValue()})
-      })
+    this.service = new CounterService(this.countRepo!)
+    this.service!.subscribe((count: Count) => {
+      this.setState({...this.state, count: count.getValue()})
+    })
     this.reload()
   }
 

@@ -1,7 +1,6 @@
-import {Observable} from 'rxjs';
+import {Observable} from 'rxjs'
 
-export interface VolatileRepository<State> {
-
+export interface RepositoryBase<State> {
   /**
    * get current state
    */
@@ -11,4 +10,6 @@ export interface VolatileRepository<State> {
    * get state stream
    */
   getStateObservable(): Observable<State>
+
+  update(count: State): void
 }
