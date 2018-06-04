@@ -1,11 +1,11 @@
 import { Component, Inject, OnInit } from '@angular/core'
-import { CountVolatileRepository } from '../../../../domain/repository/CountVolatileRepository'
-import { COUNT_P_REPO, COUNT_V_REPO } from '../../../context/inject'
+import { COUNT_P_REPO } from '../../../context/inject'
 import {
-  CountPersistRepository,
+  CountRepository,
   isFail
-} from '../../../../domain/repository/CountPersistRepository'
+} from '../../../../domain/repository/CountRepository'
 import { Count } from '../../../../domain/entities/Count'
+import {CounterService} from '../../../../domain/service/CounterService';
 
 @Component({
   selector: 'global-counter',
@@ -13,43 +13,41 @@ import { Count } from '../../../../domain/entities/Count'
   styleUrls: ['./global-counter.scss']
 })
 export class GlobalCounter implements OnInit {
-  count: number
+  count: Count
   loadingCount: number
+  service: CounterService
 
   public constructor(
-    @Inject(COUNT_P_REPO) private countPRepo: CountPersistRepository,
-    @Inject(COUNT_V_REPO) private countVRepo: CountVolatileRepository
+    @Inject(COUNT_P_REPO) countPRepo: CountRepository
   ) {
-    this.count = 0
+    this.service = new CounterService(countPRepo)
+    this.count = new Count(0)
     this.loadingCount = 0
   }
 
   ngOnInit(): void {
-    this.countVRepo.getStateObservable().subscribe((c: Count) => (this.count = c.getValue()))
+    this.service.subscribe((c: Count) => (this.count = c))
     this.reload()
   }
 
   increment(num: number): void {
-    this.countVRepo.increment(num)
+    this.service.increment(num)
   }
 
   decrement(num: number): void {
-    this.countVRepo.decrement(num)
+    this.service.decrement(num)
   }
 
   reload(): void {
     this.loadingCount = this.loadingCount + 1
-    this.countPRepo
-      .fetchCount()
-      .then((count) => this.countVRepo.update(count))
+    this.service.fetchLatest()
       .catch((e) => console.error(e))
       .finally(() => (this.loadingCount = this.loadingCount - 1))
   }
 
   save(): void {
     this.loadingCount = this.loadingCount + 1
-    this.countPRepo
-      .saveCount(new Count(this.count))
+    this.service.save(this.count)
       .then((result) => {
         if (isFail(result)) {
           window.alert(result.err.message)

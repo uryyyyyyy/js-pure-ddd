@@ -2,21 +2,17 @@ import {NgModule} from '@angular/core'
 import {Counter} from './components/counter/counter'
 import {BrowserModule} from '@angular/platform-browser'
 import {HttpClientModule} from '@angular/common/http'
-import {CountPersistRepositoryServer} from './infra/CountPersistRepositoryServer'
+import {CountRepositoryServer} from './infra/count-repository-server.service'
 import {LocalCounter} from './components/counter/localCounter/local-counter'
 import {GlobalCounter} from './components/counter/globalCounter/global-counter'
-import {COUNT_P_REPO, COUNT_V_REPO, STORE} from './context/inject'
-import {CountVolatileRepositoryImpl} from './infra/CountVolatileRepository';
-import {store} from './infra/store/Store';
+import {COUNT_P_REPO} from './context/inject'
 
 @NgModule({
   imports: [BrowserModule, HttpClientModule],
   declarations: [Counter, LocalCounter, GlobalCounter],
   bootstrap: [Counter],
   providers: [
-    { provide: STORE, useValue: store },
-    { provide: COUNT_P_REPO, useClass: CountPersistRepositoryServer },
-    { provide: COUNT_V_REPO, useClass: CountVolatileRepositoryImpl }
+    { provide: COUNT_P_REPO, useClass: CountRepositoryServer }
   ]
 })
 export class AppModule {}

@@ -1,6 +1,7 @@
-import { CountPersistRepository, Fail } from '../../domain/repository/CountPersistRepository'
-import { Count } from '../../domain/entities/Count'
+import {CountRepository, Fail} from '../../domain/repository/CountRepository'
+import {Count} from '../../domain/entities/Count'
 import {Injectable} from '@angular/core'
+import {BehaviorSubject, Observable} from 'rxjs/index';
 
 const myHeaders = new Headers({
   'Content-Type': 'application/json',
@@ -9,9 +10,24 @@ const myHeaders = new Headers({
 })
 
 @Injectable()
-export class CountPersistRepositoryServer implements CountPersistRepository {
+export class CountRepositoryServer implements CountRepository {
+  private readonly countBSubject: BehaviorSubject<Count>
 
-  constructor() {}
+  constructor() {
+    this.countBSubject = new BehaviorSubject(new Count(0))
+  }
+
+  getState(): Count {
+    return this.countBSubject.getValue()
+  }
+
+  getStateObservable(): Observable<Count> {
+    return this.countBSubject
+  }
+
+  update(count: Count): void {
+    this.countBSubject.next(count)
+  }
 
   saveCount(count: Count): Promise<void | Fail> {
     return fetch('/api/count', {
